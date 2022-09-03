@@ -1,0 +1,12 @@
+set in api.js
+
+https://api.iwin98.net/member/          -fastbet path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.superbt88.com/member/       -fastbet path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.fastbet987auto.com/member/  -fastbet path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.fastbet18.com/member/       -fastbet path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.ncbet88.com/member/	        -omgbet path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.kbbet168.com/member/        -uking path+gameUrl ไม่ต้องเเก้หน้าโฮม
+https://api.ambet1668.com/member/       -ambbet !gameUrl game หน้า Home เเก้หน้าโฮม
+https://api.ambbetx5.com/member/        -ambbet !gameUrl game หน้า Home เเก้หน้าโฮม
+https://api.ambbet16.com/member/        -ambbet !gameUrl game หน้า Home เเก้หน้าโฮม
+

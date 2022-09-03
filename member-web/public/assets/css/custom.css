@@ -1,0 +1,228 @@
+body {
+  background-color: rgb(255, 255, 255);
+  font-family: "Mitr", sans-serif;
+}
+
+.btn-blue {
+  color: white;
+  background-color: #00a4e4;
+}
+.btn-fb {
+  color: white;
+  background-color: #2f00ff;
+}
+.btn-register{
+  color: white;
+  background-color:#66bbdd;
+}
+.card-login {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border-radius: 0px 0px 80px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 20px 5px;
+}
+.responsive {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+}
+a.first::after {
+  content:'...'
+}
+
+a.last::before {
+  content:'...'
+}
+.btnamount {
+  padding: 0px;
+  display: grid;
+  grid-template-columns: 33.33% 33.33% 33.33%;
+}
+.btnselect {
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 0.5rem;
+  position: relative;
+  border: 2px solid transparent;
+  background: rgb(238, 238, 238);
+}
+.amountInfo {
+  padding: 1rem;
+  color: rgb(255, 255, 255);
+  background-color: #00a4e4;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+.card-deposit {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: rgb(238, 238, 238);
+  background-clip: border-box;
+  border: 3px solid rgba(0, 192, 251, 0.125);
+  border-radius: 0.25rem;
+}
+.btn-copy {
+  display: inline-block;
+  line-height: 1.5;
+  border: 1px solid transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  color: rgb(255, 255, 255);
+  border-radius: 25px;
+  margin: 0.5rem 0px;
+  background: rgb(34, 167, 240);
+  font-size: 0.8em;
+  padding: 0.2rem 0.6rem;
+  height: 28px;
+  min-width: 166px;
+}
+.logo-dd{
+ max-width: 100px !important;
+}
+.game{
+  border-radius: 30%;
+  width: 110px;
+  cursor: pointer;
+  border: 5px solid #dee2e6;
+  border-color: #00a4e4;
+}
+.casinolist{
+  border-radius: 30%;
+  width: 130px;
+  cursor: pointer;
+  border: 5px solid #dee2e6;
+  border-color: #00a4e4;
+}
+.ampPoker{
+  border-radius:10%;
+  width: 150px;
+  cursor: pointer;
+  border: 5px solid #dee2e6;
+  border-color: #7b7d80;
+  background-color: rgb(59, 57, 57);
+  
+}
+@media (max-width: 768px) {
+  #Footer {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  #slot {
+    padding-left: 1rem;
+  }
+}
+.refresh{
+  width: 25px;
+  cursor: pointer;
+}
+.card-promotion-landing1 {
+  border-radius: 5px;
+  border: 1px solid #c3a256;
+  background-image: linear-gradient(180deg, #e8b94d 0, #352c16 49%, #1c1817 80%, #1c1817 75%, #1c1817) !important;
+}
+.card-promotion-landing {
+  background-image: linear-gradient(90deg, #9f7239 0, #d6a850 25%, #fae0a3 50%, #eaca85 75%, #f3c86a) !important;
+  max-width: 350px;
+  position: relative;
+  cursor: pointer;
+}
+.gradient-border {
+  --border-width: 3px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 200px;
+  font-family: Lato, sans-serif;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  color: white;
+  background: #222;
+  border-radius: var(--border-width);
+}
+.rotate {
+  animation: rotation 3s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+img {
+-webkit-transition-duration: 1s;
+  -moz-transition-duration: 1s;
+  -o-transition-duration: 1s;
+  transition-duration: 1s;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -o-transition-property: -o-transform;
+  transition-property: transform;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #000;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      height: 40px;
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+  border: 1px solid #d8d8d8;
+  -moz-box-shadow: 0 1px 4px 0 rgba(0,0,0,.2);
+  -webkit-box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+}
+
+.shadow {
+  box-shadow: 0 0.5rem 1rem rgba(17, 0, 255, 0.25) !important;
+}
+
+.card-body{
+  border-radius: 15px;
+}
+
+.card {
+  border-radius: 15px;
+}
+.breadcrumb {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #ffffff;
+  border-radius: 0.50rem;
+}
