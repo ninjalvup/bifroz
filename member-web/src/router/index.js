@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// import { createRouter, createWebHashHistory } from 'vue-router'
 
 import appLayout from '../components/layouts/app-layout.vue'
 import redirect from '../components/pages/redirect.vue'
@@ -10,6 +11,7 @@ import Login from '../components/pages/login.vue'
 import Forgot from '../components/pages/forgotpassword.vue'
 import Updatepassword from '../components/pages/updatepassword.vue'
 import Register from '../components/pages/register.vue'
+import Registerotp from '../components/pages/registerotp.vue'
 import home from '../components/pages/backend/home/home.vue'
 import Profile from '../components/pages/backend/profile/profile.vue'
 import changPassword from '../components/pages/backend/profile/chang-password.vue'
@@ -25,7 +27,9 @@ import bankInfo from '../components/pages/backend/deposit/bank-Info.vue'
 import trueInfo from '../components/pages/backend/deposit/true-info.vue'
 import banklist from '../components/pages/backend/deposit/bank-list.vue'
 import truewallet from '../components/pages/backend/deposit/truewallet.vue'
+import sharedLinkwithdraw from '../components/pages/backend/sharedLink/sharedLinkwithdraw.vue'
 import sharedLink from '../components/pages/backend/sharedLink/sharedLink.vue'
+import sharedincome from '../components/pages/backend/sharedLink/sharedincome.vue'
 import withdrawInfo from '../components/pages/backend/withdraw/withdrawInfo.vue'
 import decimal from '../components/pages/backend/deposit/decimalDeposit/decimal.vue'
 import depositInfo from '../components/pages/backend/deposit/decimalDeposit/depositInfo.vue'
@@ -33,12 +37,53 @@ import userTree from '../components/pages/backend/userTree/treeChart.vue'
 import withdrawIncome from '../components/pages/backend/withdrawIncome/incomeDetail.vue'
 import incomeInfo from '../components/pages/backend/withdrawIncome/incomeInfo.vue'
 
-import Usertree from '../components/pages/usertree.vue'
+import treeChart from '../components/pages/usertree.vue'
 
 
 
 //connectgame router
-// import casino from '../components/pages/backend/game/casino/casino'
+import casino from '../components/pages/backend/game/casino/casino.vue'
+import hit from '../components/pages/backend/game/hit/hit.vue'
+import slot from '../components/pages/backend/game/slot/slot.vue'
+import ying from '../components/pages/backend/game/ying/ying.vue'
+import baccarat from '../components/pages/backend/game/baccarat/baccarat.vue'
+import mv from '../components/pages/backend/game/mv/mv.vue'
+// games
+import aws from '../components/pages/backend/game/games/aws.vue'
+import swg from '../components/pages/backend/game/games/swg.vue'
+import kg from '../components/pages/backend/game/games/kg.vue'
+import jl from '../components/pages/backend/game/games/jl.vue'
+import km from '../components/pages/backend/game/games/km.vue'
+import fc from '../components/pages/backend/game/games/fc.vue'
+import funky from '../components/pages/backend/game/games/funky.vue'
+import mg from '../components/pages/backend/game/games/mg.vue'
+import gamatron from '../components/pages/backend/game/games/gamatron.vue'
+import ep from '../components/pages/backend/game/games/ep.vue'
+import pp from '../components/pages/backend/game/games/pp.vue'
+import netent from '../components/pages/backend/game/games/netent.vue'
+import joker from '../components/pages/backend/game/games/joker.vue'
+import bpg from '../components/pages/backend/game/games/bpg.vue'
+import bng from '../components/pages/backend/game/games/bng.vue'
+import hab from '../components/pages/backend/game/games/hab.vue'
+import kgl from '../components/pages/backend/game/games/kgl.vue'
+import rlx from '../components/pages/backend/game/games/rlx.vue'
+import ygg from '../components/pages/backend/game/games/ygg.vue'
+import red from '../components/pages/backend/game/games/red.vue'
+import qs from '../components/pages/backend/game/games/qs.vue'
+import ids from '../components/pages/backend/game/games/ids.vue'
+import tk from '../components/pages/backend/game/games/tk.vue'
+import mav from '../components/pages/backend/game/games/mav.vue'
+import ds from '../components/pages/backend/game/games/ds.vue'
+import nlc from '../components/pages/backend/game/games/nlc.vue'
+import ga from '../components/pages/backend/game/games/ga.vue'
+import png from '../components/pages/backend/game/games/png.vue'
+import pug from '../components/pages/backend/game/games/pug.vue'
+import fng from '../components/pages/backend/game/games/fng.vue'
+import nge from '../components/pages/backend/game/games/nge.vue'
+import onextwo from '../components/pages/backend/game/games/onextwo.vue'
+import hak from '../components/pages/backend/game/games/hak.vue'
+import announce from '../components/pages/backend/announce/announce.vue'
+//
 // import ambPoker from '../components/pages/backend/game/ambpoker/ambPoker'
 // import slot from '../components/pages/backend/game/slot/slot'
 // import slotxo from '../components/pages/backend/game/slot/gameslot/slotxo'
@@ -51,9 +96,9 @@ import Usertree from '../components/pages/usertree.vue'
 
 
 Vue.use(VueRouter)
-  
 
-function guardMyroute(to, from, next) {  
+
+function guardMyroute(to, from, next) {
   var isAuthenticated = false;
 
   if (sessionStorage.getItem('access_token'))
@@ -84,6 +129,7 @@ function guardMyroute2(to, from, next) {
 }
 
 export default new VueRouter({
+  // mode: 'history',
   routes: [
     {
       path: '/',
@@ -99,6 +145,12 @@ export default new VueRouter({
           path: '/register',
           name: 'register', beforeEnter: guardMyroute2,
           component: Register
+
+        },
+        {
+          path: '/registerotp',
+          name: 'registerotp', beforeEnter: guardMyroute2,
+          component: Registerotp
 
         },
         {
@@ -121,9 +173,9 @@ export default new VueRouter({
         {
           path: '/userstree',
           name: 'userstree', beforeEnter: guardMyroute2,
-          component: Usertree
+          component: treeChart
         },
-   
+
 
       ]
     },
@@ -211,6 +263,16 @@ export default new VueRouter({
           component: sharedLink
         },
         {
+          path: '/sharedincome',
+          name: 'sharedincome', beforeEnter: guardMyroute,
+          component: sharedincome
+        },
+        {
+          path: '/sharedLinkwithdraw',
+          name: 'sharedLinkwithdraw', beforeEnter: guardMyroute,
+          component: sharedLinkwithdraw
+        },
+        {
           path: '/withdrawInfo',
           name: 'withdrawInfo', beforeEnter: guardMyroute,
           component: withdrawInfo
@@ -240,14 +302,270 @@ export default new VueRouter({
           name: 'incomeInfo', beforeEnter: guardMyroute,
           component: incomeInfo
         },
-        
+
         //connectgame uncomment here
 
-        // {
-        //   path: '/casino',
-        //   name: 'casino', beforeEnter: guardMyroute,
-        //   component: casino
-        // },
+        {
+          path: '/casino',
+          name: 'casino', beforeEnter: guardMyroute,
+          component: casino
+        },
+
+        {
+          path: '/hit',
+          name: 'hit', beforeEnter: guardMyroute,
+          component: hit
+        },
+        {
+        path: '/mv',
+        name: 'mv', beforeEnter: guardMyroute,
+        component: mv
+      },
+        {
+          path: '/slot',
+          name: 'slot', beforeEnter: guardMyroute,
+          component: slot
+        },
+
+        {
+          path: '/ying',
+          name: 'ying', beforeEnter: guardMyroute,
+          component: ying
+        },
+
+        {
+          path: '/baccarat',
+          name: 'baccarat', beforeEnter: guardMyroute,
+          component: baccarat
+        },
+
+        {
+          path: '/joker',
+          name: 'joker', beforeEnter: guardMyroute,
+          component: joker
+        },
+
+        {
+          path: '/onextwo',
+          name: 'onextwo', beforeEnter: guardMyroute,
+          component: onextwo
+        },
+
+        {
+          path: '/aws',
+          name: 'aws', beforeEnter: guardMyroute,
+          component: aws
+        },
+
+
+        {
+          path: '/bng',
+          name: 'bng', beforeEnter: guardMyroute,
+          component: bng
+        },
+
+        {
+          path: '/bpg',
+          name: 'bpg', beforeEnter: guardMyroute,
+          component: bpg
+        },
+
+
+        {
+          path: '/ds',
+          name: 'ds', beforeEnter: guardMyroute,
+          component: ds
+        },
+
+
+        {
+          path: '/ep',
+          name: 'ep', beforeEnter: guardMyroute,
+          component: ep
+        },
+
+
+        {
+          path: '/fc',
+          name: 'fc', beforeEnter: guardMyroute,
+          component: fc
+        },
+
+
+        {
+          path: '/fng',
+          name: 'fng', beforeEnter: guardMyroute,
+          component: fng
+        },
+
+        {
+          path: '/funky',
+          name: 'funky', beforeEnter: guardMyroute,
+          component: funky
+        },
+
+
+        {
+          path: '/ga',
+          name: 'ga', beforeEnter: guardMyroute,
+          component: ga
+        },
+
+
+        {
+          path: '/gamatron',
+          name: 'gamatron', beforeEnter: guardMyroute,
+          component: gamatron
+        },
+
+
+
+
+        {
+          path: '/hab',
+          name: 'hab', beforeEnter: guardMyroute,
+          component: hab
+        },
+
+        {
+          path: '/hak',
+          name: 'hak', beforeEnter: guardMyroute,
+          component: hak
+        },
+
+        {
+          path: '/ids',
+          name: 'ids', beforeEnter: guardMyroute,
+          component: ids
+        },
+
+        {
+          path: '/jl',
+          name: 'jl', beforeEnter: guardMyroute,
+          component: jl
+        },
+
+
+
+        {
+          path: '/kg',
+          name: 'kg', beforeEnter: guardMyroute,
+          component: kg
+        },
+
+
+        {
+          path: '/kgl',
+          name: 'kgl', beforeEnter: guardMyroute,
+          component: kgl
+        },
+
+
+        {
+          path: '/km',
+          name: 'km', beforeEnter: guardMyroute,
+          component: km
+        },
+
+
+        {
+          path: '/mav',
+          name: 'mav', beforeEnter: guardMyroute,
+          component: mav
+        },
+
+        {
+          path: '/mg',
+          name: 'mg', beforeEnter: guardMyroute,
+          component: mg
+        },
+
+        {
+          path: '/netent',
+          name: 'netent', beforeEnter: guardMyroute,
+          component: netent
+        },
+
+        {
+          path: '/nge',
+          name: 'nge', beforeEnter: guardMyroute,
+          component: nge
+        },
+
+
+        {
+          path: '/nlc',
+          name: 'nlc', beforeEnter: guardMyroute,
+          component: nlc
+        },
+
+        {
+          path: '/png',
+          name: 'png', beforeEnter: guardMyroute,
+          component: png
+        },
+
+        {
+          path: '/pp',
+          name: 'pp', beforeEnter: guardMyroute,
+          component: pp
+        },
+
+        {
+          path: '/pug',
+          name: 'pug', beforeEnter: guardMyroute,
+          component: pug
+        },
+
+        {
+          path: '/qs',
+          name: 'qs', beforeEnter: guardMyroute,
+          component: qs
+        },
+
+
+        {
+          path: '/red',
+          name: 'red', beforeEnter: guardMyroute,
+          component: red
+        },
+
+        {
+          path: '/rlx',
+          name: 'rlx', beforeEnter: guardMyroute,
+          component: rlx
+        },
+
+
+        {
+          path: '/swg',
+          name: 'swg', beforeEnter: guardMyroute,
+          component: swg
+        },
+
+
+
+
+        {
+          path: '/tk',
+          name: 'tk', beforeEnter: guardMyroute,
+          component: tk
+        },
+        {
+          path: '/ygg',
+          name: 'ygg', beforeEnter: guardMyroute,
+          component: ygg
+        },
+
+        {
+          path: '/announce',
+          name: 'announce', beforeEnter: guardMyroute,
+          component: announce
+        },
+
+
+
+
         // {
         //   path: '/ambPoker',
         //   name: 'ambPoker', beforeEnter: guardMyroute,

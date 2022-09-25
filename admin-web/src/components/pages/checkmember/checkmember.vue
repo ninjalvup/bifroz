@@ -388,7 +388,7 @@ export default {
         },
       }).then(async (result) => {
         if (result.dismiss === Swal.DismissReason.timer) {
-          console.log("I was closed by the timer");
+          // console.log("I was closed by the timer");
         }
       });
       let username = this.sb_username;
@@ -396,13 +396,15 @@ export default {
         .getCheckByUuid(username)
         .catch((error) => {
           // console.log(error.message);
-          console.log(error);
+          // console.log(error);
           // console.log(res);
 
           this.sb_username = "";
           error.res;
           swal("ไม่พบข้อมูลการฝาก!", "", "warning");
         });
+
+        // console.log(res)
 
       this.lasttwenty = res.deposit_latest;
       this.affiliateaember = res.affiliateMember;
@@ -444,13 +446,41 @@ export default {
       // // }
 
       if (this.turnover.turn_type === 2) {
+        // console.log(this.turnover.turn_over)
         this.turngoal = this.turnover.turn_over;
       }
       if (this.turnover.turn_type === 1) {
         this.turngoal = this.turnover.turn_win;
       }
+      if (this.turnover.turn_type === 0) {
+        // console.log(this.turnover.turn_over)
+        this.turngoal = this.turnover.turn_over;
+      }
+
+
+      function checkFirstLetterNumber(_string)
+        {
+        return _string.match(new RegExp(/^\d/)) !== null;    
+        }
+       let xx = res.deposit_latest[0].annotation
+       let yy = '';
+      // console.log('xx'+xx)
+      if(checkFirstLetterNumber(res.deposit_latest[0].annotation)){
+        yy = xx.split(/\s(.+)/)[0];
+        // console.log('x_turnval in IF :'+ yy)
+      } else{
+        yy = 0;
+        // console.log('x_turnval in ELSE :'+ yy)
+      }
+      
+        this.creditgoal =yy;
+     
+    
+       
+      // this.creditgoal =yy;
+      // console.log(yy)
       // console.log(res.deposit_latest_one_with_promotion.deposit_last.amount);
-      this.creditgoal =this.turngoal * Math.trunc(res.deposit_latest_one_with_promotion.deposit_last.credit_after);
+      // this.creditgoal =this.turngoal * Math.trunc(res.deposit_latest_one_with_promotion.deposit_last.credit_after);
       // console.log( Math.trunc(res.deposit_latest_one_with_promotion.deposit_last.credit_after));
       // console.log(this.turngoal);
       // console.log(this.creditgoal);

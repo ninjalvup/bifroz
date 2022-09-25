@@ -1,69 +1,58 @@
 <template>
-  <div id="">
-    <!-- footer -->
-    <!-- <footer class="footer-mobile  shadow ">
-      <div class="container-footer container "> -->
-    <!-- <span class="text-muted">Copyright © 2020 SUPERFAST-AUTO.COM V1.0.1</span> -->
-    <!-- <div class="navbar" id="myNavbar">
-          <a href="#home" class="active">
-            <img
-              class="text-blue ml-4"
-              src="assets/images/home.png"
-              alt=""
-              width="40"
-            />
-          </a>
-          <a href="#news">
-            <img
-              class="hometop"
-              src="assets/images/home.png"
-              alt=""
-              width="40" 
-            />
-          </a>
-          <a href="#contact">
-            <img
-              class="text-blue "
-              src="assets/images/home.png"
-              alt=""
-              width="40"
-            />
-          </a>
-
-           <a href="#contact">
-            <img
-              class="text-blue mr-4"
-              src="assets/images/icons/profile.png"
-              alt=""
-              width="40"
-            />
-          </a>
-        </div> -->
-    <!-- </div>
-    </footer> -->
-
-    <!-- footer -->
-    <!-- <footer class="footer-lg   ">
-      <div class="container-footer container ">
-        <span class="text-muted"
-          >Copyright © 2020 SUPERFAST-AUTO.COM V1.0.1</span
-        >
-      </div>
-    </footer> -->
+  <div id="footer">
 
     <div class="bottombar-mobile">
       <div class="container">
         <ul class="nav-menu">
           <li class="nav-item">
-            <router-link to="/home" class="nav-link">
-              <i class="fas fa-home"></i><span class="szfont">หน้าหลัก</span>
-            </router-link>
+
+
+
+
+
+            <router-link v-if="bank_name === 'kbnk'" to="/decimal" class="nav-link">
+              <img
+                src="assets/images/custom/1f.png"
+                class="img-fluid"
+                alt=""
+                srcset=""
+                width="30"
+              />
+              <!-- <i class="fa fa-arrow-down"></i> -->
+              <h5><span class="szfont">ฝากเงิน</span></h5>
+              </router-link >
+
+
+              <router-link v-if="bank_name !== 'kbnk'" to="/bankInfo" class="nav-link">
+              <img
+                src="assets/images/custom/1f.png"
+                class="img-fluid"
+                alt=""
+                srcset=""
+                width="30"
+              />
+              <!-- <i class="fa fa-arrow-down"></i> -->
+              <h5><span class="szfont">ฝากเงิน</span></h5>
+              </router-link >
+
+
+
+
           </li>
+
           <li class="nav-item">
-            <router-link to="/depositlist" class="nav-link"
-              ><i class="fa fa-arrow-down"></i
-              ><span class="szfont">ฝากเงิน</span></router-link
-            >
+            <router-link to="/#" class="nav-link">
+              <!-- <router-link to="/home" class="nav-link"> -->
+              <img
+                src="assets/images/custom/2f.png"
+                class="img-fluid"
+                alt=""
+                srcset=""
+                width="30"
+              />
+              <!-- <i class="fas fa-home"></i> -->
+              <h5><span class="szfont">โปรโมชั่น</span></h5>
+            </router-link>
           </li>
 
           <!-- <a
@@ -100,25 +89,6 @@
             </h5>
           </a> -->
 
-          <!-- <form method="POST" action="https://imi9bet.com/posttokenv2.php" accept-charset="UTF-8">
-                    <input type="hidden" id="customform_lang" name="Lang" value="en-us" />
-                    <input type="hidden" id="customform_Com" name="Com" value="IMIBET" />
-                    <input type="hidden" id="customform_CustomDomain" name="CustomDomain" value="1" />
-                    <input type="hidden" id="customform_IsMobile" name="IsMobile" value="true" />
-                    <input type="hidden" id="customform_UserName" name="UserName" placeholder="UserID" :value="sb_username" />
-                    <input type="hidden" id="customform_Password" name="Password" placeholder="Password" :value="sb_password2" />
-                    <button type="submit" style="background-color: rgba(255, 0, 0, 0); border-style: none;">
-                        <div class="circle-wrapper">
-                            <div class="success circle"></div>
-                            <div class="icon-game">
-                                <i class="fas fa-gamepad" style="font-size: 30px;"></i>
-                            </div>
-                        </div>
-                        <h5 style="color: white; font-size: 16px; text-align: center; margin-top: 27px;">
-                            เล่นเกม
-                        </h5>
-                    </button>
-                </form> -->
           <!-- <form id="customform" class="customform" method="POST" action="https://imi9bet.com/posttokenv2.php">
                     <input type="hidden" id="customform_lang" name="Lang" value="en-us">
                     <input type="hidden" id="customform_Com" name="Com" value="IMIBET">
@@ -136,8 +106,53 @@
                     <div id="customformmsg"></div>
                 </form> -->
 
+
+          <li class="nav-item">
+            <!-- <router-link to="/withdraw" class="nav-link"> -->
+            <router-link to="/home" class="nav-link circle-wrapper">
+              <img
+                src="assets/images/custom/footer.gif"
+                class="img-fluid rounded-circle"
+                alt=""
+                srcset=""
+              />
+              <!-- <i class="fa fa-arrow-up"></i> -->
+            </router-link>
+          </li>
+
           <!-- <a
             @click="postBetflixToken()"
+            class="text-white"
+            style="text-decoration: none"
+          >
+            <div class="circle-wrapper">
+              <img
+                src="assets/images/custom/footer.png"
+                class="img-fluid rounded-circle"
+                alt=""
+                srcset=""
+              />
+            </div>
+          </a> -->
+
+          <!-- <a
+            @click="postBetflixTokenWe()"
+            class="text-white"
+            style="text-decoration: none"
+          >
+            <div class="circle-wrapper">
+              <div class="success circle"></div>
+              <div class="icon-game">
+                <i class="fas fa-gamepad" style="font-size: 30px"></i>
+              </div>
+            </div>
+            <h5 style="font-size: 16px; text-align: center; margin-top: 27px">
+              ทดสอบ
+            </h5>
+          </a> -->
+
+          <!-- <a
+            @click="postGettoken()"
             class="text-white"
             style="text-decoration: none"
           >
@@ -152,25 +167,18 @@
             </h5>
           </a> -->
 
-           <a
-            @click="postGettoken()"
-            class="text-white"
-            style="text-decoration: none"
-          >
-            <div class="circle-wrapper">
-              <div class="success circle"></div>
-              <div class="icon-game">
-                <i class="fas fa-gamepad" style="font-size: 30px"></i>
-              </div>
-            </div>
-            <h5 style="font-size: 16px; text-align: center; margin-top: 27px">
-              เล่นเกม
-            </h5>
-          </a>
-
           <li class="nav-item">
-            <router-link to="/withdraw" class="nav-link">
-              <i class="fa fa-arrow-up"></i><span class="szfont">ถอนเงิน</span>
+            <!-- <router-link to="/withdraw" class="nav-link"> -->
+            <router-link to="announce" class="nav-link">
+              <img
+                src="assets/images/custom/3f.png"
+                class="img-fluid"
+                alt=""
+                srcset=""
+                width="30"
+              />
+              <!-- <i class="fa fa-arrow-up"></i> -->
+              <h5><span class="szfont">ประกาศ</span></h5>
             </router-link>
           </li>
 
@@ -180,14 +188,28 @@
             </a>
           </li> -->
 
+
           <li class="nav-item text-white">
-            <router-link to="/profile" class="nav-link text-white">
-              <i class="fa fa-user"></i><span class="szfont">โปรไฟล์ฉัน</span>
-            </router-link>
-          </li>
+              <a class="nav-link text-white nav-item " href="https://lin.ee/txP1QWO">
+   
+                <img
+                  src="assets/images/custom/4f.png"
+                  class="img-fluid"
+                  alt=""
+                  srcset=""
+                  width="30"
+                />
+                <!-- <i class="fa fa-user"></i> -->
+                <h5><span class="szfont">ติดต่อ</span></h5>
+              </a>
+            </li>
+
+
+
+
         </ul>
 
-        <!--        <div class="sc-12wx88y-3 bVdwMI">
+        <!-- <div class="sc-12wx88y-3 bVdwMI">
             <div class="sc-12wx88y-9 kuSzFa">
               <div class="sc-12wx88y-7 fiZGWH">
                 <h4 class="sc-12wx88y-8 fyxztE">หน้าแรก</h4>
@@ -362,10 +384,12 @@ export default {
       sb_password2: "",
       url: "",
       checkMobile: "",
+      bank_name: "",
+      b1: window.location.origin,
     };
   },
   mounted() {
-    console.log(this.isMobile());
+    // console.log(this.isMobile());
     // redirect play game by path_URL
     axios({
       method: "get",
@@ -381,6 +405,7 @@ export default {
         this.sb_username = response.data.data.sb_username;
         this.sb_password = response.data.data.sb_password;
         this.sb_password2 = encodeURIComponent(this.sb_password);
+        this.bank_name = response.data.data.bank_name;
         //redirect game uking omg fastbet
         // let UserName = sessionStorage.getItem("sb_username");
         // let password = sessionStorage.getItem("sb_password");
@@ -412,6 +437,7 @@ export default {
         // this.url = `https://akin88.com?username=${this.sb_username}&password=${this.sb_password2}`;
         // this.url = `https://heng99.net?username=${this.sb_username}&password=${this.sb_password2}`;
         // this.url = `https://heng99.net?username=${this.sb_username}&password=${this.sb_password2}`;
+        // let url = `https://api.bifroz.com/betflix/api/loginGame/${this.sb_username}`;
         this.checkMobile = this.isMobile();
         // this.url = `https://api-imi9bet.superfast-auto.com/imi/api/gamelogin/${this.sb_username}/${this.sb_password2}/${this.checkMobile}`;
         // this.url = `https://sportbook.thesunsport.net/?username=${this.sb_username}&password=${this.sb_password2}`;
@@ -434,34 +460,17 @@ export default {
     //     this.url = res.data.url;
     //     window.location.href = this.url;
     // },
+
     async postBetflixToken() {
-      // let urltoken = `https://api.psg777.com/v1/userlogin`;
-      // let getTokenForm = {
-      //     'username': this.sb_username,
-      //     // 'password': this.sb_password2
-      // }
-      // const res = await axios.post(urltoken, getTokenForm, {
-      //     headers: {
-      //         'content-type': 'application/x-www-form-urlencoded'
-      //     }
-      // }, );
-      // console.log(res);
-// imi9bet
-      let url = `https://api-imi9bet.superfast-auto.com/imi/api/gamelogin/${this.sb_username}/${this.sb_password2}/${this.checkMobile}`;
+      let url = `https://api.bifroz.com/betflix/api/loginGame/${this.sb_username}`;
       const res = await axios.get(url);
-      window.location.href = res.data.RedirectUrl;
+      window.location.href = res.data.url; // betflix
+    },
 
-      // let url = `https://api-betflixspin.superfast-auto.com/betflix/api/loginGame/${this.sb_username}`;
-      // let url = `https://api-slotpg.superfast-auto.com/member/api/member/launch-game`;
-      // let url = `https://api-betflixn.superfast-auto.com/betflix/api/loginGame/${this.sb_username}`;
-      // let url = `https://api-betflixspin.superfast-auto.com/betflix/api/loginGame/${this.sb_username}`;
-      // let url = `https://api-betflixspin.superfast-auto.com/betflix/api/loginGame/${this.sb_username}`;
-      // const res = await axios.post(url,getTokenForm);
-      // console.log(res.data.data.url);
-
-      // window.location.href = url;
-// betflix
-      // window.location.href = res.data.data.url;
+    async postBetflixTokenWe() {
+      let url = `https://api.bifroz.com/betflix/api/loginGameWe/${this.sb_username}`;
+      const res = await axios.get(url);
+      window.location.href = res.data.url;
     },
 
     async postGettoken() {
@@ -470,7 +479,7 @@ export default {
         username: sessionStorage.getItem("sb_username"),
         password: sessionStorage.getItem("sb_password"),
       };
-      
+
       // const res = await postLogin.getToken(form);
       const res = await postLogin.postUfa(form);
       // console.log(res.data.RedirectUrl);
@@ -529,13 +538,28 @@ export default {
 }
 
 .bottombar-mobile {
-  background: linear-gradient(0deg, #007bff 0%, rgb(0 121 255 / 62%) 100%);
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    0deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(25, 25, 25, 1) 35%,
+    rgba(25, 25, 25, 1) 65%,
+    rgba(0, 0, 0, 1) 100%
+  );
   position: fixed;
   right: 0;
   left: 0;
   padding-top: 2px;
   bottom: 0;
   z-index: 1000;
+  box-shadow: 0 0 5px gold;
+  /* background: linear-gradient(0deg, #007bff 0%, rgb(0 121 255 / 62%) 100%);
+  position: fixed;
+  right: 0;
+  left: 0;
+  padding-top: 2px;
+  bottom: 0;
+  z-index: 1000; */
 }
 
 .bottombar-mobile .nav-menu {
@@ -554,7 +578,7 @@ export default {
 .bottombar-mobile .nav-menu .nav-item .nav-link {
   text-decoration: none;
   padding: 0.25rem 0;
-  opacity: 0.75;
+  opacity: 1;
   color: #fff;
   display: block;
 }
@@ -721,10 +745,10 @@ svg:not(:root) {
 
 .circle-wrapper {
   position: relative;
-  width: 60px;
+  /* width: 60px;
   height: 60px;
-  float: left;
-  margin: -2.15rem auto auto;
+  float: left; */
+  margin: -1.4rem auto auto;
 }
 
 .icon-game {
@@ -750,13 +774,13 @@ svg:not(:root) {
   animation: spin 2s linear infinite;
 }
 
-.success {
+/* .success {
   background-color: red;
   border: 2.5px dashed #ffa9a9;
-}
+} */
 
-.error {
-}
+/* .error {
+} */
 
 .warning {
   background-color: #f0d500;
@@ -776,4 +800,5 @@ svg:not(:root) {
   align-items: center;
   justify-content: center;
 }
+
 </style>

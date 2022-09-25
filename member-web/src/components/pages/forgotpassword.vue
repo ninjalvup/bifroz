@@ -1,12 +1,22 @@
 <template>
-  <div id="register">
-    <div class="row mt-5">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+  <div id="register"
+  style="
+    height: 100vh;
+"
+  
+  >
+    <div class="row pt-5">
+      <div class="p-5">
            <div class="text-center mb-4">
           <img v-bind:src="logo" class="rounded" alt="..." width="80%" />
         </div>
-        <div class="card-login mt-5">
-          <div class="card-body p-5">
+        <div class="mt-5">
+          <div class="card-body"
+          style="background-color: rgba(0, 0, 0, 0.3) !important; border-radius: 1.25rem !important;"
+          
+          
+          
+          >
             <form id="regiration_form" class="mb-2">
               <section v-if="step == 1">
                 <h6 class="mb-3 text-center">ลืมรหัสผ่าน? 1/2</h6>
@@ -283,5 +293,43 @@ export default {
 ,#1e7e34,#28a745);
     border-width: 0;
     color: #fff!important;
+}
+
+
+.card-login {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border-radius: 1.25rem;
+    box-shadow: rgb(0 0 0 / 10%) 0px 5px 20px 5px;
+}
+
+
+
+
+
+
+#register{
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-image: url(/img/input.4f058afc.jpg) !important;
+    background-position: center;
+}
+
+
+* {
+  color: wheat;
+}
+.btn-gradient {
+    background-image: linear-gradient( 270deg ,wheat, wheat);
+    color: wheat;
+    border-width: 0;
+    color: black!important;
 }
 </style>

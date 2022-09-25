@@ -264,85 +264,21 @@ exports.approveWithdraw = async (req, res, next) => {
   try {
     const { uuid, create_by, annotation } = req.body;
 
-    const withdrawUser = await models.Member_Account_Bank_Transaction.findOne({
-      where: {
-        uuid: uuid,
+     // update status
+     await models.Member_Account_Bank_Transaction.update(
+      {
+        transaction_status: "Success",
+        create_by: create_by,
+        auto_status: "manual",
+        annotation: annotation
       },
-      attributes: ["uuid", "username"],
-    });
-
-    const lastRef = await models.Ref_Deposit.findOne({
-      where: {
-        username: withdrawUser.username,
-      },
-      order: [
-        ['id', 'desc']
-      ],
-      limit: 1
-    });
-
-    // check ref
-    const checkRef = await models.Affiliate_Deposit.findAll({
-      where: {
-        ref: lastRef.ref
-      },
-      order: [
-        ['id', 'desc']
-      ],
-      limit: 1
-    })
-
-
-      if (checkRef[0].ref !=  null) {
-        // diff date, Dew
-        const date1 = new Date(lastRef.createdAt)
-        const date2 = new Date()
-        const diffTime = Math.abs(date2 - date1)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-        // get total_turn
-        let validAmount = ''
-        if (diffDays < 8) { // วันที่ check ต้องน้อยกว่า 8 วัน
-          const  response = await axios.post(`${urlConfig}/api/askmebet/winLost`, {
-            username: withdrawUser.username,
-            group_id: checkRef[0].ref,
-          }, {
-            headers: {
-            'Content-Type': 'application/json',
-            }
-          }).then(response => response.data)
-  
-          validAmount = response.data.result.result.summary.validAmount // set total_turn
-        } else {
-          validAmount = 0
-        }
-  
-        // update total_turn
-        await models.Affiliate_Deposit.update({
-          turnover: validAmount
-        }, {
-          where: {
-            ref: checkRef[0].ref
-          }
-        })
-  
-        // update status
-        await models.Member_Account_Bank_Transaction.update(
-          {
-            transaction_status: "Success",
-            create_by: create_by,
-            auto_status: "manual",
-            annotation: annotation
-          },
-          {
-            where: {
-              uuid: uuid,
-            },
-          }
-        );
-  
+      {
+        where: {
+          uuid: uuid,
+        },
       }
-  
+    );
+
       res.status(200).json({
         data: {
           message: "อัพเดทรายการถอนมือเรียบร้อย",
@@ -423,13 +359,13 @@ exports.checkDataMember = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     } else {
-      /*winLost = await this.getWinLostByRef(
+      winLost = await this.getWinLostByRef(
         refWithCredit[0].username,
         // member.group_id,
         refWithCredit[0].ref,
         refWithCredit[0].createdAt,
         current_time
-      );*/
+      );
       depositLatest = await this.getDepositLatest(refWithCredit[0].username);
       depositLatestOneWithPromotion = await this.getDepositLatestOne(
         refWithCredit[0].username
@@ -439,7 +375,7 @@ exports.checkDataMember = async (req, res, next) => {
     res.status(200).json({
       user: refWithCredit,
       info: info,
-      //win_lost: winLost.data,
+      win_lost: winLost.data,
       deposit_latest_one_with_promotion: depositLatestOneWithPromotion,
       deposit_latest: depositLatest,
     });
@@ -814,14 +750,14 @@ exports.approveWithdrawAuto = async (req, res, next) => {
           bank_type: 2,
         },
       });
-  
+
       let scbLogin = await scb.login(bank.username, bank.password);
       let current_time = moment().format("YYYY-MM-DD HH:mm:ss");
       console.log("run...");
       console.log(scbLogin);
-  
+
       console.log("data2:", uuid, amount, bank_name, bank_number);
-  
+
       if (scbLogin.data.status === "Success") {
         // update status process
         statusProcess = await models.Member_Account_Bank_Transaction.update(
@@ -836,11 +772,11 @@ exports.approveWithdrawAuto = async (req, res, next) => {
             },
           }
         );
-  
+
         setTimeout(async function () {
           scbWithdraw = await scb.withdraw(bankCode, bank_number, amount, uuid); // uuid
           console.log(scbWithdraw);
-  
+
           if (scbWithdraw.data.status === "Success") {
             statusProcess = await models.Member_Account_Bank_Transaction.update(
               {
@@ -855,14 +791,14 @@ exports.approveWithdrawAuto = async (req, res, next) => {
                 },
               }
             );
-  
+
             console.log(statusProcess);
-  
+
             res.status(200).json({
               message: "อัพเดทข้อมูลเรียบร้อยแล้ว",
               statusWithdraw: scbWithdraw.data.system,
             });
-  
+
           } else if (scbWithdraw.data.status === "Fail") {
             statusProcess = await models.Member_Account_Bank_Transaction.update(
               {
@@ -876,9 +812,9 @@ exports.approveWithdrawAuto = async (req, res, next) => {
                 },
               }
             );
-  
+
             console.log(statusProcess);
-  
+
             res.status(200).json({
               message: "อัพเดทข้อมูลเรียบร้อยแล้ว",
               statusWithdraw: scbWithdraw.data.system,
@@ -899,15 +835,12 @@ exports.approveWithdrawAuto = async (req, res, next) => {
             },
           }
         );
-  
+
         console.log(statusProcess);
-  
+
       }
-  
 
     }
-
-
 
   } catch (error) {
     next(error);
@@ -953,7 +886,7 @@ exports.checkOTP = async (req, res, next) => {
         let statusProcess = await models.Member_Account_Bank_Transaction.update(
           {
             credit_bank_after: res.data.balance_after,
-            transaction_slip: "https://api-mabetplace.superfast-auto.com/withdraw" + res.data.image,
+            transaction_slip: "https://api.bifroz.com/withdraw" + res.data.image,
             annotation: res.data.content,
             auto_status: res.data.system,
             transaction_status: res.data.status,
@@ -997,18 +930,19 @@ exports.checkOTP = async (req, res, next) => {
           ],
           limit: 1
         })
-  
+
+
+          // diff date, Dew
+      const date1 = new Date(lastRef.createdAt)
+      const date2 = new Date()
+      const diffTime = Math.abs(date2 - date1)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
       if (checkRef[0].ref !=  null) {
-        // diff date, Dew
-        const date1 = new Date(lastRef.createdAt)
-        const date2 = new Date()
-        const diffTime = Math.abs(date2 - date1)
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-        
         // get total_turn
         let validAmount = ''
         if (diffDays < 8) { // วันที่ check ต้องน้อยกว่า 8 วัน
-          const  response = await axios.post(`${urlConfig}/api/askmebet/winLost`, {
+          const  response = await axios.post(`${urlConfig}/api/winLost`, {
             username: withdrawUser.username,
             group_id: checkRef[0].ref,
           }, {
@@ -1016,12 +950,12 @@ exports.checkOTP = async (req, res, next) => {
             'Content-Type': 'application/json',
             }
           }).then(response => response.data)
-  
+
           validAmount = response.data.result.result.summary.validAmount // set total_turn
         } else {
           validAmount = 0
         }
-  
+
         // update total_turn
         await models.Affiliate_Deposit.update({
           turnover: validAmount
@@ -1030,7 +964,7 @@ exports.checkOTP = async (req, res, next) => {
             ref: checkRef[0].ref
           }
         })
-  
+
         // update status
         await models.Member_Account_Bank_Transaction.update(
           {
@@ -1045,7 +979,7 @@ exports.checkOTP = async (req, res, next) => {
             },
           }
         );
-  
+
       }
 
         console.log(statusProcess);

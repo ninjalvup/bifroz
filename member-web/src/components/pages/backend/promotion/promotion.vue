@@ -1,16 +1,16 @@
 <template>
   <div id="promotion">
     <!-- promotion menu -->
-    <div class="row mt-3 justify-content-center">
+    <div class="row mt-3 justify-content-center d-none">
       <div class="col-md-9">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
+          <ol
+            class="breadcrumb"
+          >
             <li class="breadcrumb-item">
               <router-link to="/home">หนัาหลัก</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              โปรโมชั่น
-            </li>
+            <li class="breadcrumb-item" aria-current="page">โปรโมชั่น</li>
           </ol>
         </nav>
       </div>
@@ -18,15 +18,26 @@
     <div class="row mt-2 justify-content-center">
       <div class="col-md-9">
         <div class="card">
-          <div class="card-body rounded">
+          <div
+            class="card-body rounded p-0"
+          >
             <div class="card">
-              <div class="card-header">
+              <div
+                class="card-header border border-dark"
+              >
                 <h5>promotion</h5>
               </div>
               <div
-                class="card-body text-center"
+                class="card-body text-center border border-dark"
                 v-for="data in promotion"
                 v-bind:key="data.id"
+                style="
+                  background-image: url(assets/images/custom/bg-menu.png);
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  position: relative;
+                  background-position: center;
+                "
               >
                 <h5>{{ data.promotion_name }}</h5>
                 <div class="card-body text-center">
@@ -67,7 +78,8 @@ export default {
       },
     })
       .then((response) => {
-        this.promotion = response.data.data;
+        this.promotion = response.data.data.filter(status => status.status === "1");
+        console.log(this.promotion);
       })
       .catch((error) => {
         console.log(error);
@@ -76,4 +88,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+* {
+  color: #000;
+  font-weight: 700 !important;
+}
+
+.card-body{
+  padding: 0px;
+}
+</style>

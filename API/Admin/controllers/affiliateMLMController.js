@@ -64,7 +64,7 @@ exports.searchData = async (req, res, next) => {
         });// result query
 
         res.status(200).json({
-            data: result,
+            data: result
         });
     } catch (error) {
         next(error);
@@ -161,7 +161,7 @@ exports.checkData = async (req, res, next) => {
                 }
                 for (let i=1; i <= 10; i++) {
                     sum += "LEFT JOIN (\n"
-                    sum += "	SELECT member_uuid_member, SUM((turnover / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
+                    sum += "	SELECT member_uuid_member, SUM((amount / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
                     sum += ") AS p"+i+" ON (f"+i+".member_uuid_member = p"+i+".member_uuid_member)\n"
                 } // end query income amount
                 resultSum = await models.sequelize.query(sum, {
@@ -222,7 +222,7 @@ exports.checkData = async (req, res, next) => {
 
                 // query transactions bank
                 let tran = "SELECT \n" + // query lv1
-                    "	m.id, sm.sb_username, IFNULL(FORMAT(m.turnover / 100 * m.percent_value, 2), 0.00) AS income, m.deposite_date, 1 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value, 2) AS income, m.deposite_date, 1 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv1)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -232,7 +232,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv2
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 2 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 2 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv2)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -242,7 +242,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv3
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 3 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 3 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv3)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -252,7 +252,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv4
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 4 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 4 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv4)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -262,7 +262,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv5
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 5 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 5 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv5)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -272,7 +272,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv6
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 6 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 6 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv6)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -282,7 +282,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv7
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 7 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 7 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv7)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -292,7 +292,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv8
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 8 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 8 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv8)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -302,7 +302,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv9
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 9 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 9 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv9)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -312,7 +312,7 @@ exports.checkData = async (req, res, next) => {
 
                     // query lv10
                     "SELECT \n" +
-                    "	m.id, sm.sb_username, FORMAT(m.turnover / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 10 AS 'LV'\n" +
+                    "	m.id, sm.sb_username, FORMAT(m.amount / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value / 100 * m.percent_value, 2) AS income, m.deposite_date, 10 AS 'LV'\n" +
                     "FROM (\n" +
                     "	SELECT * FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv10)+") AND `status` = 0\n" +
                     ") AS m \n" +
@@ -343,8 +343,7 @@ exports.checkData = async (req, res, next) => {
                 userName: user,
                 total: totalUser,
                 totalIncome: totalIncome,
-                table: listTable,
-                sql: rs_tran
+                table: listTable
             }
         });
     } catch (error) {
@@ -457,7 +456,8 @@ exports.searchDataTreeTable = async (req, res, next) => {
             } else {
 
                 let lv1 = [], lv2 = [], lv3 = [], lv4 = [], lv5 = [], lv6 = [], lv7 = [], lv8 = [], lv9 = [], lv10 = [];
-                rs_users.map(function(item) { // add obj to arr 1-10 LV
+                rs_users.map(function(item, index) { // add obj to arr 1-10 LV
+                    console.log('\x1b[41m', `'${item.lv1}',`);
                     lv1.push(item.lv1);
                     lv2.push(item.lv2);
                     lv3.push(item.lv3);
@@ -468,7 +468,7 @@ exports.searchDataTreeTable = async (req, res, next) => {
                     lv8.push(item.lv8);
                     lv9.push(item.lv9);
                     lv10.push(item.lv10);
-                });
+                });                
                 
                 fnSplit = (queryLv) => { // fn split
                     let data = "";
@@ -483,118 +483,59 @@ exports.searchDataTreeTable = async (req, res, next) => {
                 }
 
                 // query transactions bank
-                let tran = "SELECT \n" + // query lv1
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 1 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, FORMAT(SUM(turnover) / 100 * percent_value, 2) AS total FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv1)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                let tran = `
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 1 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv1)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv2
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 2 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value, 2) AS total FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv2)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv2)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv3
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 3 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv3)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv3)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv4
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 4 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" +
-                    "     FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" + 
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv4)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv4)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv5
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 5 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv5)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv5)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv6
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 6 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv6)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv6)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv7
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 7 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv7)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv7)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv8
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 8 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv8)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv8)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv9
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 9 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv9)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) UNION ALL \n" +
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv9)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid UNION ALL 
 
-                    // query lv10
-                    "SELECT \n" +
-                    "	m.id, sm.sb_username, m.total AS income, sm.register_date, 10 AS 'LV'\n" +
-                    "FROM (\n" +
-                    "	SELECT *, \n" + 
-                    "       FORMAT(SUM(turnover) / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value / 100 * percent_value, 2) AS total\n" +
-                    "   FROM Affiliate_Deposits WHERE member_uuid_member IN ("+fnSplit(lv10)+") AND `status` = 0 GROUP BY member_uuid_member\n" +
-                    ") AS m \n" +
-                    "LEFT JOIN (\n" +
-                    "	SELECT * FROM Members\n" +
-                    ") AS sm ON (m.member_uuid_member = sm.uuid) ORDER BY lv, id\n"
+                    SELECT m.*, IFNULL(FORMAT(SUM(af.amount) / 100 * af.percent_value, 2), 0.00) AS income, 2 AS LV FROM (
+                        SELECT id, sb_username, uuid, CONCAT(first_name,' ',last_name) AS fullName, register_date FROM Members WHERE uuid IN (${fnSplit(lv10)})
+                    ) AS m
+                    LEFT JOIN Affiliate_Deposits AS af ON (m.uuid = af.member_uuid_member AND af.status = 0) GROUP BY m.uuid
+
+                    ORDER BY id
+                `;
 
                 rs_tran = await models.sequelize.query(tran, {
                     type: models.sequelize.QueryTypes.SELECT

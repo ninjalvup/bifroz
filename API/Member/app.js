@@ -23,7 +23,7 @@ const creditRouter = require('./routes/credit');
 const decimalRouter = require('./routes/decimal');
 const userTreeRouter = require('./routes/userTree');
 const incomeRouter = require('./routes/withdrawIncome');
-
+const tbsRouter = require('./routes/tbs');
 const app = express();
 
 app.use(cors());
@@ -54,7 +54,7 @@ app.use('/api/credit', creditRouter);
 app.use('/api/decimal', decimalRouter);
 app.use('/api/userTree', userTreeRouter);
 app.use('/api/income', incomeRouter);
-
+app.use('/api/tbs', tbsRouter);
 
 
 app.use(errorHandler);

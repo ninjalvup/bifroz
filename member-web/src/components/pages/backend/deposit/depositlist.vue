@@ -1,30 +1,85 @@
 <template>
   <div id="">
     <!-- หน้ารายการฝากเงิน -->
-    <div class="row  justify-content-center">
-      <div class="col-md-9">
-        <nav aria-label="breadcrumb  ">
-          <ol class="breadcrumb shadow">
+    <!-- <div class="row justify-content-center">
+      <div class="col-md-9 mt-3">
+        <nav aria-label="breadcrumb">
+          <ol
+            class="breadcrumb shadow"
+            style="
+              background-color: #1b1b1b;
+            "
+          >
             <li class="breadcrumb-item">
-              <router-link to="/home">หนัาหลัก</router-link>
+              <router-link to="/home" style="color: black; font-weight: bold"
+                >หนัาหลัก</router-link
+              >
             </li>
-            <!-- <li class="breadcrumb-item" aria-current="page">
-              <router-link to="/deposit">ฝากเงิน</router-link>
-            </li>-->
-            <li class="breadcrumb-item active" aria-current="page">
+            <li
+              class="breadcrumb-item active"
+              aria-current="page"
+              style="color: black; font-weight: bold"
+            >
               เลือกการฝาก
             </li>
           </ol>
         </nav>
       </div>
-    </div>
-    <div class="row  justify-content-center">
-      <div class="col-md-9">
-        <UserData />
+    </div> -->
 
-        <div class="card mt-3  border-0">
-          <div class="card-body border-0 shadow">
-            <i class="fab fa-bitcoin text-danger"></i> ฝาก
+    <div class="row">
+      <div class="col-4 p-2">
+        <router-link to="/depositlist">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-1.webp"
+            alt=""
+          />
+        </router-link>
+      </div>
+
+      <div class="col-4 p-2">
+        <router-link to="/withdraw">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-2.webp"
+            alt=""
+          />
+        </router-link>
+      </div>
+
+      <div class="col-4 p-2">
+        <router-link to="/report">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-3.webp"
+            alt=""
+          />
+        </router-link>
+      </div>
+    </div>
+
+    <div class="row justify-content-center"
+    style="
+    margin-top: 100px;
+    margin-bottom: 100px
+    
+      "
+    >
+      <div class="col-md-9">
+        <!-- <UserData /> -->
+        <div class="card mt-3 border-0"
+        style="
+    background-color: #2a2a2a;
+"
+        >
+          <div
+            class="card-body border-0 rounded"
+            style="
+            background-color: #1b1b1b;
+            "
+          >
+            <i class="fab fa-bitcoin text-danger"></i> <span class="text-white">ฝาก</span> 
             <div class="float-right">
               <div class="custom-control custom-switch">
                 <input
@@ -34,12 +89,12 @@
                   id="customSwitches"
                   value="1"
                 />
-                <label
+                <!-- <label
                   @click.prevent="bonusUpdate"
                   class="custom-control-label"
                   for="customSwitches"
                   >โบนัส</label
-                >
+                > -->
               </div>
             </div>
 
@@ -70,7 +125,7 @@
                 </div>
               </router-link>
 
-              <router-link to="/trueinfo" v-if="status_truewallet ">
+              <router-link to="/trueinfo" v-if="status_truewallet">
                 <div class="">
                   <div class="mrimg">
                     <img
@@ -87,6 +142,74 @@
         </div>
       </div>
     </div>
+    <!-- รายการฝาก -->
+    <!-- <div class="p-0 mt-1">
+      <table class="table table-striped"
+            style="
+        background-image: url(assets/images/custom/bg-menu.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+        background-position: center;
+      "
+      >
+        <thead>
+          <tr>
+            <th scope="col">ฝาก ฿</th>
+            <th scope="col">ยอดก่อนฝาก</th>
+                        <th scope="col">ยอดหลังฝาก</th>
+            <th scope="col">วันที่ฝาก</th>
+            <th scope="col">สถานะ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="data in reportdeposit" v-bind:key="data.status">
+            <td
+              v-if="
+                data.transaction_status == 'Success' ||
+                data.transaction_status == 'manual'
+              "
+            >
+              {{ data.amount | formatNumber }}
+            </td>
+            <td>{{data.credit_before| formatNumber}}</td>
+                        <td>{{data.credit_after| formatNumber}}</td>
+            <td
+              v-if="
+                data.transaction_status == 'Success' ||
+                data.transaction_status == 'manual'
+              "
+            >
+              {{ data.bank_time }}
+            </td>
+            <td
+              v-if="
+                data.transaction_status == 'Success' ||
+                data.transaction_status == 'manual'
+              "
+            >
+              <div
+                v-if="
+                  data.transaction_status == 'Success' ||
+                  data.transaction_status == 'manual'
+                "
+              >
+                <p>สำเร็จ</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr v-if="reportdeposit.length == '0'">
+            <td colspan="8" class="text-center text-danger">
+              <i class="fas fa-times"></i>
+              ไม่มีข้อมูล !
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
+
     <div
       class="modal fade"
       id="exampleModal"
@@ -165,13 +288,13 @@
 </template>
 
 <script>
-import UserData from "./../home/user-data";
+// import UserData from "./../home/user-data";
 import axios from "axios";
 import profileService from "./../../../../services/profile";
 import { baseURL } from "../../../../services/api";
 export default {
   components: {
-    UserData,
+    // UserData,
   },
   data() {
     return {
@@ -182,10 +305,28 @@ export default {
       status_decimal: "",
       status_auto: "",
       status_truewallet: "",
-      option_truewallet:''
+      option_truewallet: "",
     };
   },
   mounted() {
+    // axios({
+    //   method: "get",
+    //   url: baseURL + "/member/reportdeposit",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+    //   },
+    // })
+    //   .then((response) => {
+    //     this.reportdeposit = response.data.data.status;
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     if (error.response.data == "Unauthorized") {
+    //       sessionStorage.removeItem("access_token");
+    //     }
+    //   });
+
     axios({
       method: "get",
       url: baseURL + "/member/bank",
@@ -196,7 +337,7 @@ export default {
     })
       .then((response) => {
         var depositType = response.data.data;
-        console.log(depositType);
+        // console.log(depositType);
         // let aaa = 'truewallet';
 
         // for (let index = 0; index < depositType.length; index++) {
@@ -211,7 +352,10 @@ export default {
 
         for (let index = 0; index < depositType.length; index++) {
           // console.log(depositType[index].bank_name);
-          if (depositType[index].bank_name === "truemoney" && depositType[index].bank_status == "1") {
+          if (
+            depositType[index].bank_name === "truemoney" &&
+            depositType[index].bank_status == "1"
+          ) {
             this.status_truewallet = depositType[index].bank_name;
           } else if (depositType[index].bank_type == "1") {
             if (
@@ -306,8 +450,8 @@ export default {
   transform: scale(1.5);
 }
 img {
-  -webkit-filter: drop-shadow(5px 5px 5px rgb(125, 138, 250));
-  filter: drop-shadow(5px 5px 5px rgb(151, 122, 255));
+  /* -webkit-filter: drop-shadow(5px 5px 5px rgb(125, 138, 250));
+  filter: drop-shadow(5px 5px 5px rgb(151, 122, 255)); */
 }
 
 .zoom {
@@ -324,6 +468,10 @@ img {
 .mrimg {
   margin-right: 20px;
 }
+* {
+  color: #000;
+  font-weight: 700 !important;
+}
 
 @media only screen and (max-width: 768px) {
   .zoom {
@@ -338,5 +486,9 @@ img {
   .mrimg {
     margin-right: 5px;
   }
+}
+
+.rounded {
+    border-radius: 1.25rem !important;
 }
 </style>

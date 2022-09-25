@@ -11,31 +11,26 @@ const e = require('express');
 const error_list_turnover = require('../models/error_list_turnover');
 const main_bank = require('../models/main_bank');
 const moment = require('moment');
-
+const tbs  = require('../services/tbsService.js')
+const TBS_REQUEST_OTP='https://otp.thaibulksms.com/v2/otp/request'
+const TBS_VERIFY_OTP='https://otp.thaibulksms.com/v2/otp/verify'
 const key = config_env.KEY;
 const agent = config_env.AGENT;
 const hash = config_env.HASH;
 
 
-const urlConfig = config_env.URL_CONFIG; 
-// const urlConfig = "http://139.59.232.84:5000"; 
-// const urlConfig = "http://188.166.217.116:5000"; 
-// const urlConfig = "http://159.65.131.248:5000"; 
-// const urlConfig = "http://165.22.252.205:5000"; 
-// const urlConfig = "http://206.189.47.140:5000"; 
-// const urlConfig = "http://209.97.164.93:5000"; 
-// const urlConfig = "http://157.230.34.221:5000"; 
+const urlConfig = config_env.URL_CONFIG;
 
 
 exports.createUser = async (tel, password, first_name, last_name) => {
 
   try {
 
-
+    console.log("=createUser=", `${urlConfig}/api/register`);
     const contact = `${first_name} ${last_name}`;
     // const hashText = md5(`${tel}:${password}:${agent}`);
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/register`, {
+    const response = await axios.post(`${urlConfig}/api/register`, {
       tel: tel,
       password: password,
       contact: contact,
@@ -46,19 +41,7 @@ exports.createUser = async (tel, password, first_name, last_name) => {
       }
     });
 
-    // console.log(response.data.message);
-
-    console.log("response:", response);
-
-
- 
-      return response;
-   
-    // if (response.data.error.message != " ") {
-
-
-    // }
-
+    return response;
 
   } catch (error) {
     return error
@@ -66,14 +49,35 @@ exports.createUser = async (tel, password, first_name, last_name) => {
 
 }
 
-exports.withdrawcredit = async (amount, _id) => {
+exports.resetPassword = async (username, password) => {
+
   try {
 
-    console.log("withdrawcredit");
+    const response = await axios.post(`${urlConfig}/api/reset-password`, {
+      username: username,
+      newPassword: password,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/add-withdraw`, {
+    console.log("response:", response);
+
+    return response;
+
+  } catch (error) {
+    return error
+  }
+
+}
+
+exports.withdrawcredit = async (amount, username) => {
+  try {
+
+    const response = await axios.post(`${urlConfig}/api/add-withdraw`, {
       "amount": amount,
-      "id": _id
+      "username": username
     }
     );
 
@@ -83,6 +87,29 @@ exports.withdrawcredit = async (amount, _id) => {
 
   } catch (error) {
     throw error;
+  }
+};
+
+exports.winlose = async (dateTimeFrom, dateTiemTo, username) => {
+  try {
+
+    const date = new Date();
+    const today = moment(date).format("YYYY-MM-DD");
+
+    const resp = await axios({
+      method: "post",
+      url: `${urlConfig}/api/winlost`,
+      data: {
+        dateTimeFrom: today,
+        dateTimeTo: today,
+        username: username,
+      }
+    });
+
+    return resp;
+
+  } catch (error) {
+
   }
 };
 
@@ -100,7 +127,7 @@ exports.getCredit = async (req, res, next) => {
 
     const sb_username = member.sb_username;
 
-    const response = await axios.get(`${urlConfig}/api/askmebet/credit/${sb_username}`);
+    const response = await axios.get(`${urlConfig}/api/credit/${sb_username}`);
 
 
     res.status(200).json({
@@ -115,75 +142,34 @@ exports.getCredit = async (req, res, next) => {
   }
 };
 
-exports.gettestwinlose = async (req, res, next) => {
-  try {
-
-
-    const member = await models.Member.findOne({
-      attributes: { exclude: ['password'] },
-      where: {
-        uuid: req.user.uuid,
-      },
-    });
-
-    const sb_username = member.sb_username;
-    console.log(sb_username);
-    console.log(member.group_id);
-
-    const response = await axios.get(`${urlConfig}/api/askmebet/winlost`, {
-      username: sb_username,
-      group_id: member.group_id,
-
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-
-    console.log(response.data);
-    return res.status(200).json({
-      data: response.data.result
-    });
-
-
-  } catch (error) { }
-}
-
-
-
-
-exports.winlose = async (username, dateTimeFrom, dateTiemTo, group_id) => {
-  try {
-
-    const resp = await axios({
-      method: "post",
-      url: `${urlConfig}/api/askmebet/winlost`,
-      data: {
-        username: username,
-        dateTimeFrom: dateTimeFrom,
-        dateTimeTo: dateTiemTo,
-        group_id: group_id
-
-      }
-    });
-
-
-
-    return resp;
-
-  } catch (error) {
-
-  }
-};
 
 exports.creditget = async (sb_username) => {
   try {
 
-    const response = await axios.get(`${urlConfig}/api/askmebet/credit/${sb_username}`);
+    const response = await axios.get(`${urlConfig}/api/credit/${sb_username}`);
 
 
     return response.data.current_credit[0].balance;
 
+
+  } catch (error) {
+    next(error);
+
+  }
+}
+
+// new path
+exports.launchGame = async (username, password) => {
+  try {
+
+    const response = await axios.post(`${urlConfig}/api/launch`, {
+      username: username,
+      password: password
+    });
+
+    console.log(response);
+
+    return response.data
 
   } catch (error) {
     next(error);
@@ -234,6 +220,7 @@ exports.getreflatest = async (sb_username) => {
 
   }
 }
+
 exports.getref = async (sb_username) => {
   try {
 
@@ -257,65 +244,169 @@ exports.getref = async (sb_username) => {
 }
 
 
+// exports.withdraw = async (req, res, next) => {
+
+//   try {
+
+//     const { amount } = req.body;
+//     //validation
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       const error = new Error('ข้อมูลที่รับมาไม่ถูกต้อง');
+//       error.statusCode = 422;
+//       error.validation = errors.array();
+//       throw error;
+//     }
+
+//     const username = req.user.sb_username;
+
+//     const combine = await models.Combine.findOne();
+//     const creditba = await this.creditget(username);
+
+//     let bank_time = moment().locale("th").format("YYYY-MM-DD HH:mm:ss");
+
+//     if (combine.status_auto === 1) {
+
+//       if (creditba <= combine.dataValues.credit_min) {
+//         const error = new Error(`จำนวนเครดิตขั้นต่ำที่สามารถถอนได้ ${combine.dataValues.credit_min} `);
+//         error.statusCode = 422;
+//         error.validation = errors.array();
+//         throw error;
+//       }
+
+//       if (amount >= combine.dataValues.credit_max) {
+
+//         const error = new Error(`จำนวนเงินมากที่สุดที่จะไม่ทำการอณุมัติออโต้ ${combine.dataValues.credit_max}`);
+//         error.statusCode = 422;
+//         error.validation = errors.array();
+//         throw error;
+
+//       }
+//     }
+
+
+//     let datetimelast = moment();
+//     let datecurrent = moment(datetimelast).format('YYYY-MM-DD');
+
+//     const countwithdraw = await models.Member_account_bank_transaction.findAndCountAll({
+//       where: {
+
+//         username: username,
+//         transaction_type: 2,
+//         createdAt: {
+//           [Op.between]: [`${datecurrent}T11:00:00.000Z`, `${datecurrent}T23:59:00.000Z`],
+//         }
+
+
+//       }
+//     })
+
+
+
+//     if (combine.status_amount === 1) {
+//       if (countwithdraw.count > combine.amount) {
+//         const error = new Error(`จำกัดจำนวนครั้งต่อวัน ${combine.amount}`);
+//         error.statusCode = 422;
+//         error.validation = errors.array();
+//         throw error;
+//       }
+//     }
+
+//     let check_withdraw;
+
+//     const creditwithdraw = await this.withdrawcredit(amount, req.user.sb_username);
+
+//     const member_account_bank = await models.Member_account_bank.findOne({
+//         where: {
+//           member_uuid: req.user.uuid
+//         },
+//     });
+
+//       const membertran = await models.Member_account_bank_transaction.create({
+//         uuid: uuidv4(),
+//         amount: amount,
+//         credit_before: creditwithdraw.data.result[0].beforeBalance,
+//         credit_after: creditwithdraw.data.result[0].afterBalance,
+//         ref: creditwithdraw.data.result[0].ref,
+//         bank: member_account_bank.uuid,
+//         transaction_status: "Approve",
+//         transaction_type: '2', //ผากหรือถอน
+//         username: req.user.sb_username,
+//         bank_time: bank_time
+//       });
+
+//       check_withdraw = "รออนุมัติ";
+//       console.log("ok");
+
+
+
+//     return res.status(200).json({
+//         data: check_withdraw
+//     });
+
+//   } catch (error) {
+//     next(error);
+
+//   }
+
+// }
 
 exports.withdraw = async (req, res, next) => {
-
   try {
-
     const { amount } = req.body;
     //validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error('ข้อมูลที่รับมาไม่ถูกต้อง');
+      const error = new Error("ข้อมูลที่รับมาไม่ถูกต้อง");
       error.statusCode = 422;
       error.validation = errors.array();
       throw error;
     }
 
     const username = req.user.sb_username;
+    let winLost, depositAll, error_listone;
 
     const combine = await models.Combine.findOne();
     const creditba = await this.creditget(username);
 
-    let bank_time = moment().locale("th").format("YYYY-MM-DD HH:mm:ss");
-
     if (combine.status_auto === 1) {
-
       if (creditba <= combine.dataValues.credit_min) {
-        const error = new Error(`จำนวนเครดิตขั้นต่ำที่สามารถถอนได้ ${combine.dataValues.credit_min} `);
+        const error = new Error(
+          `จำนวนเครดิตขั้นต่ำที่สามารถถอนได้ ${combine.dataValues.credit_min} `
+        );
         error.statusCode = 422;
         error.validation = errors.array();
         throw error;
       }
 
       if (amount >= combine.dataValues.credit_max) {
-
-        const error = new Error(`จำนวนเงินมากที่สุดที่จะไม่ทำการอณุมัติออโต้ ${combine.dataValues.credit_max}`);
+        const error = new Error(
+          `จำนวนเงินมากที่สุดที่จะไม่ทำการอณุมัติออโต้ ${combine.dataValues.credit_max}`
+        );
         error.statusCode = 422;
         error.validation = errors.array();
         throw error;
-
       }
     }
 
-
     let datetimelast = moment();
-    let datecurrent = moment(datetimelast).format('YYYY-MM-DD');
+    let datecurrent = moment(datetimelast).format("YYYY-MM-DD");
 
-    const countwithdraw = await models.Member_account_bank_transaction.findAndCountAll({
-      where: {
+    const countwithdraw =
+      await models.Member_account_bank_transaction.findAndCountAll({
+        where: {
+          username: username,
+          transaction_type: 2,
+          createdAt: {
+            [Op.between]: [
+              `${datecurrent}T11:00:00.000Z`,
+              `${datecurrent}T23:59:00.000Z`,
+            ],
+          },
+        },
+      });
 
-        username: username,
-        transaction_type: 2,
-        createdAt: {
-          [Op.between]: [`${datecurrent}T11:00:00.000Z`, `${datecurrent}T23:59:00.000Z`],
-        }
-
-
-      }
-    })
-
-
+    console.log("1111");
 
     if (combine.status_amount === 1) {
       if (countwithdraw.count > combine.amount) {
@@ -326,48 +417,231 @@ exports.withdraw = async (req, res, next) => {
       }
     }
 
-    let check_withdraw;
-
-    const creditwithdraw = await this.withdrawcredit(amount, req.user.sb_username);
-
-    const member_account_bank = await models.Member_account_bank.findOne({
-        where: {
-          member_uuid: req.user.uuid
-        },
+    console.log("222");
+    const refall = await models.Ref_deposits.findAll({
+      where: {
+        username: username,
+        status: 0,
+      },
     });
 
-      const membertran = await models.Member_account_bank_transaction.create({
-        uuid: uuidv4(),
-        amount: amount,
-        credit_before: creditwithdraw.data.result[0].beforeBalance,
-        credit_after: creditwithdraw.data.result[0].afterBalance,
-        ref: creditwithdraw.data.result[0].ref,
-        bank: member_account_bank.uuid,
-        transaction_status: "Approve",
-        transaction_type: '2', //ผากหรือถอน
-        username: req.user.sb_username,
-        bank_time: bank_time
-      });
+    console.log("33333");
 
-      check_withdraw = "รออนุมัติ";
-      console.log("ok");
+    const ref = await this.getref(username);
+    console.log("4444");
+    // let datetime = moment(ref.createdAt).format('YYYY-MM-DD HH:mm:ss');
+    let timelast = moment().add(543);
+    let todaydate = moment().locale("th").format("YYYY-MM-DD");
+    let todaytime = moment().locale("th").format("23:59:59");
+    console.log("55555");
+    let t = "T";
+    let z = ".000Z";
 
+    let start_datef =
+      moment(ref.createdAt).subtract(1, "days").format("YYYY-MM-DD") +
+      t +
+      "00:00:00" +
+      z;
+    let start_datelast = todaydate + t + todaytime + z;
+    console.log("66666");
 
+    console.log(start_datef);
+    console.log("ref.createdAt:", start_datef);
+    console.log("datetimelast:", start_datelast);
+
+    const winLostsum = await this.winlose(
+      start_datef,
+      start_datelast,
+      username,
+    );
+    console.log(winLostsum.data);
+
+    console.log("77777");
+    console.log("======");
+    console.log(
+      "winlost2:",
+      winLostsum.data.data.result.result.summary.validAmount
+    );
+    console.log("credit:", creditba);
+    console.log("====================================1");
+
+    let moneysumcheck = 0;
+    let checkamount = 0;
+    let checkmax_withdraw = 0;
+    let sum_withdraw = 0;
+    let check_turn = 0;
+    console.log("====================================");
+    console.log("refall:", refall);
+    console.log("====================================");
+    //checksumm
+    for (i = 0; i < refall.length; i++) {
+      error_listone = await this.getError_turnover(refall[i].uuid);
+      depositAll = await getDepositAll(refall[i].username, refall[i].ref);
+
+      if (error_listone == null) {
+        deAll = depositAll.depositall;
+        promo = depositAll.promotion;
+
+        if (promo.turn_type == 1) {
+          checkamount = (deAll.bonus_credit + deAll.amount) * promo.turn_win;
+          check_turn = 1;
+          console.log("checkamount turnwin", checkamount);
+        } else {
+          checkamount = (deAll.bonus_credit + deAll.amount) * promo.turn_over;
+          check_turn = 2;
+          console.log("checkamount turnover", checkamount);
+        }
+
+        checkmax_withdraw =
+          (deAll.bonus_credit + deAll.amount) * promo.max_withdraw;
+      } else {
+        deAll = depositAll.depositall;
+
+        if (error_listone.turn_type == 1) {
+          checkamount = deAll.amount * error_listone.turn_win;
+          check_turn = 1;
+          console.log("checkamount turnwinpro", checkamount);
+        } else {
+          checkamount = deAll.amount * error_listone.turn_over;
+          check_turn = 2;
+          console.log("checkamount turnoverprp", checkamount);
+        }
+
+        checkmax_withdraw = deAll.amount * error_listone.max_withdraw;
+      }
+
+      moneysumcheck = checkamount;
+      sum_withdraw = checkmax_withdraw;
+    }
+
+    let check_withdraw;
+    console.log(
+      "winlost:",
+      winLostsum.data.data.result.result.summary.validAmount
+    );
+    let bank_time = moment().locale("th").format("YYYY-MM-DD HH:mm:ss");
+
+    console.log("sumturn:", moneysumcheck);
+    console.log("bank_time:", bank_time);
+    console.log("====================================");
+    console.log("check_turn:", check_turn);
+    console.log("====================================");
+
+    if (check_turn == 1) {
+      console.log("moneysumcheck", moneysumcheck);
+      console.log("credit:", creditba);
+      if (creditba >= moneysumcheck) {
+        if (amount > sum_withdraw) {
+          check_withdraw = "ถอนเกินจำนวนเงินที่กำหนดไว้";
+        } else {
+          await models.Ref_deposits.update(
+            {
+              status: 1,
+            },
+            {
+              where: {
+                username: req.user.sb_username,
+              },
+            }
+          );
+
+          const creditwithdraw = await this.withdrawcredit(
+            amount,
+            req.user.sb_username
+          );
+
+          const member_account_bank = await models.Member_account_bank.findOne({
+            where: {
+              member_uuid: req.user.uuid,
+            },
+          });
+
+          await models.Member_account_bank_transaction.create({
+            uuid: uuidv4(),
+            amount: amount,
+            credit_before: creditwithdraw.data.result[0].beforeBalance,
+            credit_after: creditwithdraw.data.result[0].afterBalance,
+            ref: creditwithdraw.data.result[0].ref,
+            bank: member_account_bank.uuid,
+            transaction_status: "Approve",
+            transaction_type: "2", //ผากหรือถอน
+            username: req.user.sb_username,
+            bank_time: bank_time,
+          });
+
+          check_withdraw = "รออนุมัติ";
+          console.log("ok");
+        }
+      } else {
+        check_withdraw = "turn_win ยังไม่ถึง";
+        console.log("not");
+      }
+    } else {
+      console.log(
+        "validAmount:",
+        winLostsum.data.data.result.result.summary.validAmount
+      );
+      console.log("moneysumcheck:", moneysumcheck);
+      if (
+        winLostsum.data.data.result.result.summary.validAmount >= moneysumcheck
+      ) {
+        console.log("=========123");
+
+        if (amount > sum_withdraw) {
+          check_withdraw = "ถอนเกินจำนวนเงินที่กำหนดไว้";
+        } else {
+          console.log("=========123555555");
+          await models.Ref_deposits.update(
+            {
+              status: 1,
+            },
+            {
+              where: {
+                username: req.user.sb_username,
+              },
+            }
+          );
+
+          const creditwithdraw = await this.withdrawcredit(
+            amount,
+            req.user.sb_username
+          );
+
+          const member_account_bank = await models.Member_account_bank.findOne({
+            where: {
+              member_uuid: req.user.uuid,
+            },
+          });
+
+          await models.Member_account_bank_transaction.create({
+            uuid: uuidv4(),
+            amount: amount,
+            credit_before: creditwithdraw.data.result[0].beforeBalance,
+            credit_after: creditwithdraw.data.result[0].afterBalance,
+            ref: creditwithdraw.data.result[0].ref,
+            bank: member_account_bank.uuid,
+            transaction_status: "Approve",
+            transaction_type: "2", //ผากหรือถอน
+            username: req.user.sb_username,
+            bank_time: bank_time,
+          });
+
+          check_withdraw = "รออนุมัติ";
+          console.log("ok");
+        }
+      } else {
+        check_withdraw = "turn_over ยังไม่ถึง";
+        console.log("not");
+      }
+    }
 
     return res.status(200).json({
-        data: check_withdraw
+      data: check_withdraw,
     });
-
   } catch (error) {
     next(error);
-
   }
-
-}
-
-
-
-
+};
 
 async function getDepositAll(username, ref) {
   try {
@@ -473,19 +747,19 @@ exports.getDepositLatestOne = async (username) => {
 
 
 
-async function deposit(amount, sb_username) {
+async function deposit(amount, username) {
   try {
 
     const user = await models.Member.findOne({
       where: {
-        sb_username: sb_username
+        sb_username: username
       }
     });
 
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/add-deposit`, {
+    const response = await axios.post(`${urlConfig}/api/add-deposit`, {
       amount: amount,
-      id: sb_username
+      username: username
     }
       , {
         headers: {
@@ -1041,7 +1315,7 @@ exports.autocurl = async (req, res, next) => {
 
             } else {
 
-              //โอนผ่าน promptpay 
+              //โอนผ่าน promptpay
 
               // if (tranLatest.length === 0) {
               //   const error = new Error('ข้อมูลที่รับมาไม่ถูกต้อง');
@@ -1331,7 +1605,7 @@ exports.autocurl = async (req, res, next) => {
 
           } else {
 
-            //โอนผ่าน promptpay 
+            //โอนผ่าน promptpay
 
             let promotion;
             if (member.bonus === 0) {
@@ -1552,7 +1826,7 @@ async function findProfileOtherBank(bank_account_number) {
 exports.withdrawIncome = async (req, res, next) => {
   try {
     // req.user.uuid
-    
+
     // query income amount
     let sum = "SELECT\n"
     sum += "IFNULL(REPLACE(FORMAT(SUM(DISTINCT p1.total1), 2), ',', ''), 0) AS total1,\n"
@@ -1575,7 +1849,7 @@ exports.withdrawIncome = async (req, res, next) => {
     }
     for (let i=1; i <= 10; i++) {
         sum += "LEFT JOIN (\n"
-        sum += "	SELECT member_uuid_member, SUM((turnover / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
+        sum += "	SELECT member_uuid_member, SUM((amount / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
         sum += ") AS p"+i+" ON (f"+i+".member_uuid_member = p"+i+".member_uuid_member)\n"
     } // end query income amount
 
@@ -1593,7 +1867,40 @@ exports.withdrawIncome = async (req, res, next) => {
     });
 
   } catch (error) {
+    next(error);
+  }
+}
+
+exports.callTBSGetOTP = async (req, res, next) => {
+  var params = {
+    key: req.body.key,
+    secret: req.body.secret,
+    msisdn: req.body.tel
+  }
+  try{
+    const callTBS = tbs(TBS_REQUEST_OTP)
+    const result = await callTBS.request(params)
+    console.log("result getotp:",result);
+    res.send(result);
+  }catch (error){
     next(error); 
   }
 }
 
+exports.callTBSVerifyOTP = async (req, res, next) => {
+  var params = {
+    key: req.body.key,
+    secret: req.body.secret,
+    token: req.body.token,
+    pin: req.body.pin
+    }
+  try{
+    const callTBS = tbs(TBS_VERIFY_OTP)
+    const result = await callTBS.verify(params)
+    console.log("result verifyotp:",result);
+    res.send(result);
+  }catch (error){
+
+    next(error); 
+  }
+}

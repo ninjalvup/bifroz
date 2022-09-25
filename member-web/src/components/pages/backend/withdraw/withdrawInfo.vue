@@ -1,25 +1,17 @@
 <template>
-  <div id="home">
-    <div class="row mt-3 justify-content-center">
+  <div id="home" class="mb-5">
+    <div
+      class="row mt-2 justify-content-center"
+      style="margin-top: 100px !important; margin-bottom: 150px"
+    >
       <div class="col-md-9">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb shadow">
-            <li class="breadcrumb-item">
-              <router-link to="/home">หนัาหลัก</router-link>
-            </li>
-            <!-- <li class="breadcrumb-item" aria-current="page">
-              <router-link to="/deposit">ฝากเงิน</router-link>
-            </li>-->
-            <li class="breadcrumb-item active" aria-current="page">
-              รายละเอียดการถอน
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-    <div class="row mt-2 justify-content-center">
-      <div class="col-md-9">
-        <div class="card shadow border-0 mt-4">
+        <div
+          class="card border-0 mt-4 rounded"
+          style="
+            border-radius: 1.25rem !important;
+            background-color: rgb(27, 27, 27);
+          "
+        >
           <div class="card-body">
             รายละเอียดการถอน
             <hr />
@@ -61,7 +53,7 @@
                         <div v-if="bank_name == 'bay'">
                           <h6>ธนาคาร: ธนาคารกรุงศรีอยุธยา</h6>
                         </div>
-                         <div v-if="bank_name == 'ttb'">
+                        <div v-if="bank_name == 'ttb'">
                           <h6>ธนาคาร: ธนาคารทหารไทยธนชาต (TTB)</h6>
                         </div>
                         <div v-if="bank_name == 'bbla'">
@@ -148,9 +140,10 @@
                 <router-link
                   to="/home"
                   value="withdraw"
-                  class="btn btn-blue btn-lg rounded-pill text-center text-white"
+                  class="btn btn-lg rounded-pill text-center text-white"
+                  style="color: black !important; background-color: wheat"
                 >
-                  <i class="fas fa-check-circle"></i> กลับสู่หน้าหลัก
+                  กลับสู่หน้าหลัก
                 </router-link>
               </div>
             </div>
@@ -225,3 +218,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+* {
+  color: wheat;
+  font-weight: 700 !important;
+}
+</style>

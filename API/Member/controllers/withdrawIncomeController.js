@@ -270,7 +270,7 @@ function fnSumAmount(uuid) { // sum รายได้
     }
     for (let i=1; i <= 10; i++) {
         sum += "LEFT JOIN (\n"
-        sum += "	SELECT member_uuid_member, SUM((turnover / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
+        sum += "	SELECT member_uuid_member, SUM((amount / 100) * percent_value) AS total"+i+", percent_value FROM Affiliate_Deposits WHERE `status` = 0 GROUP BY member_uuid_member\n"
         sum += ") AS p"+i+" ON (f"+i+".member_uuid_member = p"+i+".member_uuid_member)\n"
     } // end query income amount
 

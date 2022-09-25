@@ -1,5 +1,5 @@
 
-const path = `https://api-example.superfast-auto.com/admin/`;
+const path = `https://api.bifroz.com/admin/`;
 
 // https: // const path = `http://localhost:5001/`
 

@@ -5,7 +5,7 @@ exports.login = async (username, password) => {
 
         console.log(username, password);
   
-        const response = await axios.post(`http://localhost:8000/login`, {
+        const response = await axios.post(`http://178.128.98.24/login`, {
             "username": username,
             "password": password,
          });
@@ -23,7 +23,7 @@ exports.withdraw = async (bankcode, bankaccount, amount, uuid) => {
 
         console.log(bankcode, bankaccount, amount, uuid);
   
-        const response = await axios.post(`http://localhost:8000/withdraw`, {
+        const response = await axios.post(`http://178.128.98.24/withdraw`, {
             "bankcode": bankcode,
             "bankaccount": bankaccount,
             "amount": amount,
@@ -41,7 +41,7 @@ exports.withdraw = async (bankcode, bankaccount, amount, uuid) => {
 exports.smsOTP = async (smsOTP) => {
     try {
     console.log("otp1");
-        const response = await axios.post(`http://localhost:8000/OTP`, {
+        const response = await axios.post(`http://178.128.98.24/OTP`, {
             "smsOTP": smsOTP,
          });
          console.log("otp2");

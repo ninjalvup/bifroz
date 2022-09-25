@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/node_restful_api_admin",
-    "start": "pm2 start ./bin/node_restful_api_admin -i max"
+    "dev": "nodemon ./bin/www",
+    "start": "pm2 start ./bin/www -i max --name 'admin-api'"
   },
   "dependencies": {
     "axios": "^0.21.1",

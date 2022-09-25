@@ -1,8 +1,17 @@
 <template>
   <div id="app">
-    <header class="main-header">
+    <header class="main-header"
+    style="background-color: rgb(58, 63, 72) !important; color: white !important;"
+    
+    >
       <!-- Logo Header -->
-      <div class="logo-header" data-background-color="white">
+      <div class="logo-header"
+      style="
+    background-color: #3a3f48 !important;
+    color: white !important;
+"
+      
+      >
         <a class="logo">
           <img
             src="../../assets/SUPERFASTHEADER.png"
@@ -35,10 +44,46 @@
 
       <nav
         class="navbar navbar-header navbar-expand-lg"
-        data-background-color="blue2"
+        
       >
         <div class="container-fluid">
           <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+            <router-link to="user">
+              <div>
+                <h6 class="mr-4" style="color: white">
+                  <span>สมัครสำเร็จ </span>
+                  <span class="badge badge-pill badge-danger">{{
+                    member.length
+                  }}</span>
+                </h6>
+              </div>
+            </router-link>
+
+
+            <router-link to="home">
+              <div>
+                <h6 class="mr-4" style="color: white">
+                  <span>ฝากไม่สำเร็จ </span>
+                  <span class="badge badge-pill badge-danger">{{
+                    smstable.length
+                  }}</span>
+                </h6>
+              </div>
+            </router-link>
+
+
+            <router-link to="withdrawpending">
+
+              <div>
+                <h6 class="mr-4" style="color: white">
+                  <span>แจ้งถอนเงิน </span>
+                  <span class="badge badge-pill badge-danger">{{
+                    withdrawpending.length
+                  }}</span>
+                </h6>
+              </div>
+            </router-link>
+
             <div style="font-size: 25px" class="row">
               <div>
                 <h6 class="mr-4" style="color: white">
@@ -66,33 +111,98 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 import { baseURL } from "./../../services/api";
+import moment from "moment";
+import smsService from "@/services/smsService";
 // import bankService from "@/services/bankService";
 
 import axios from "axios";
+
 export default {
   data() {
     return {
       username: "",
       role: "",
+      search_type: "",
+      member: [],
+      smstable: [],
+      todaydate: "",
+      todaytime: "",
+      todaytime2: "",
+      status: "",
+      withdrawpending: "",
     };
   },
+
   mounted() {
-    // this.getAppAPI();
+    this.getWait();
+
     this.showProfile();
   },
   methods: {
+    async getWait() {
+      let status = "Approve";
+      this.todaydate = moment().locale("th").format("YYYY-MM-DD");
+      this.todaytime = moment().locale("th").format("00:00:00");
+      this.todaytime2 = moment().locale("th").format("23:59:59");
+      const t = "T";
+      const z = "";
+      let search_type = this.search_type;
+      const username = "";
+      const start_date = this.todaydate + t + this.todaytime + z;
+      const end_date = this.todaydate + t + this.todaytime2 + z;
 
+      axios({
+        method: "get",
+        url: `${baseURL}/member/?start_date=${start_date}&end_date=${end_date}&username=${username}&search_type=${search_type}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then(async (response) => {
+          this.member = await response.data.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
+      ("Approve");
 
+      axios({
+        method: "get",
+        url: `${baseURL}/member_transaction/withdraw-pending-list?start_date=${start_date}&end_date=${end_date}&status=${status}&username=${username}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then(async (response) => {
+          this.withdrawpending = response.data.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-    // async checkAuth() {
-    //   const res = await UserService.getProfile().catch(function (error) {
-      
-    //   });
-    //   res.logout;
-    // },
+      this.firstData = this.smstable.length;
+
+      const res = await smsService.getScbSmsTransactionWait();
+      // console.log(res.data);
+      this.smstable = res.data;
+      // console.log(this.smstable.length);
+
+      if (this.firstData < this.smstable.length) {
+        let self = this;
+        self.playAudio();
+      }
+
+      let self = this;
+      setTimeout(async function () {
+        await self.getWait();
+      }, 2000);
+    },
+
     showProfile() {
       axios({
         method: "get",
@@ -108,18 +218,17 @@ export default {
           // console.log(res);
           this.username = res.data.data.username;
           this.role = res.data.data.role;
-          
         })
         .catch(function (error) {
           if (error.response) {
             console.log(error.response.data);
           }
-            if (error.response.status === 401 || error.response.status === 500) {
-          const removeToken = localStorage.removeItem("access_token");
-          if (removeToken == null) {
-            this.$router.push("/login");
+          if (error.response.status === 401 || error.response.status === 500) {
+            const removeToken = localStorage.removeItem("access_token");
+            if (removeToken == null) {
+              this.$router.push("/login");
+            }
           }
-        }
         });
     },
     logout() {

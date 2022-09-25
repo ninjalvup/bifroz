@@ -1,6 +1,8 @@
 <template>
-  <div class="login">
-    <div class="row mt-5">
+  <div class="login"
+  style="height: 100vh;"
+  >
+    <div class="row pt-5 mx-3">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="text-center mb-4">
           <img v-bind:src="logo" class="rounded" alt="..." width="80%" />
@@ -10,8 +12,10 @@
             <img v-bind:src="logo" width="80%" />
           </div>
         </div> -->
-        <div class="card-login card-signin my-5">
-          <div class="card-body mb-3 mt-3">
+        <div class="card-signin my-5">
+          <div class="card-body mb-3 mt-3 p-5"
+          style="background-color: rgba(0, 0, 0, 0.3) !important;"
+          >
               <h4 class="text-center">ตั้งรหัสผ่านใหม่ของคุณ</h4>
             <!-- <h5 class="card-title text-center">Payment Auto </h5> -->
             <form v-on:submit.prevent="cfupdatepassword">
@@ -155,4 +159,45 @@ export default {
     },
   },
 };
+
 </script>
+<style scoped>
+
+.card-login {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border-radius: 1.25rem;
+    box-shadow: rgb(0 0 0 / 10%) 0px 5px 20px 5px;
+}
+
+
+
+
+
+
+.login{
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-image: url(/img/input.4f058afc.jpg) !important;
+    background-position: center;
+}
+
+
+* {
+  color: wheat;
+}
+
+.btn-gradient {
+    background-image: linear-gradient( 270deg ,wheat, wheat);
+    color: wheat;
+    border-width: 0;
+    color: black!important;
+}
+</style>

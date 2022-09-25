@@ -1,24 +1,24 @@
 const models = require("../models/index");
 const { v4: uuidv4 } = require("uuid");
 const askmebetController = require("./askmebetController");
-const bankdepositController = require("./bank_deposit/transaction");
 const { Op } = require("sequelize");
 const moment = require("moment");
 const urlConfig = "http://localhost:5000";
 const axios = require("axios")
+const bankdepositController = require("./bank_deposit/transaction");
 
 exports.insertSms = async (req, res, next) => {
   try {
 
 
-  
+
     const scb_App = await models.Scb_App.findOne({
       where:{
         status_type: 1
       }
     });
     if(scb_App.status != 1){
-       
+
     const status_sms = 0; // status sms
 
     const { phoneNumber, sms } = req.body;
@@ -163,7 +163,7 @@ exports.insertSms = async (req, res, next) => {
             data: smsTransaction,
           });
         } else {
-          if (key === "49nxm") {
+          if (key === "bfz") {
             if (bank_tranfer === "") {
               bank_tranfer = "SCB";
             }
@@ -206,7 +206,7 @@ exports.insertSms = async (req, res, next) => {
           }
         }
       } else {
-        if (key === "49nxm") {
+        if (key === "bfz") {
           if (bank_tranfer === "") {
             bank_tranfer = "SCB";
           }
@@ -404,9 +404,6 @@ exports.approvedSmsSCB = async (req, res, next) => {
       attributes: ["uuid", "_id", "bonus"],
       where: { sb_username: username },
     });
-console.log(member);
-
-
 
     if (member === null) {
       const error = new Error("ไม่พบรหัสข้อมูลนี้");
@@ -487,36 +484,50 @@ console.log(member);
     );
 
     // check ref
-    const checkRef = await models.Affiliate_Deposit.findAll({
+    const checkRef = await models.Affiliate_Deposit.findOne({
       where: {
         member_uuid_member:  member.uuid
       },
-      order: [ 
+      order: [
        ['id', 'desc']
       ],
       limit: 1
     })
 
-console.log(checkRef);
 
-    if (checkRef[0].ref !=  null) {
+    console.log("ck: ", checkRef);
+
+    if (checkRef != null) {
+
+          // diff date, Dew
+    const date1 = new Date(checkRef.createdAt)
+    const date2 = new Date()
+    const diffTime = Math.abs(date2 - date1)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
       // get total_turn
-      console.log('111');
-      const  response = await axios.post(`${urlConfig}/api/askmebet/winLost`, {
-        username: username,
-        group_id : checkRef[0].ref
-      }, {
-        headers: {
-        'Content-Type': 'application/json',
-        }
-      }).then(response => response.data)
+      let validAmount = ''
+      if (diffDays < 8) { // วันที่ check ต้องน้อยกว่า 8 วัน
+        const  response = await axios.post(`${urlConfig}/api/winLost`, {
+          username: username,
+          refId : checkRef.ref
+        }, {
+          headers: {
+          'Content-Type': 'application/json',
+          }
+        }).then(response => response.data)
+
+        validAmount = response.data.result.result.summary.validAmount // set total_turn
+      } else {
+        validAmount = 0
+      }
 
       // update total_turn
       await models.Affiliate_Deposit.update({
-        turnover: response.data.result.result.summary.validAmount
+        turnover: validAmount
       }, {
         where: {
-          ref: checkRef[0].ref
+          ref: checkRef.ref
         }
       })
     }
@@ -559,6 +570,7 @@ exports.approvedSmsSCBAuto = async (
 
     if (member.bonus === 1) {
       resp = await this.mapBonusPromotion(member.uuid, amount);
+      console.log("rest prom1: ", resp);
       bonus = resp.bonus;
       console.log(bonus);
     } else {
@@ -570,6 +582,7 @@ exports.approvedSmsSCBAuto = async (
       });
 
       bonus = resp.max_bonus;
+      console.log("rest prom2: ", resp);
       console.log(bonus);
     }
 
@@ -626,39 +639,52 @@ exports.approvedSmsSCBAuto = async (
       }
     );
 
- 
+
 
     // check ref
-    const checkRef = await models.Affiliate_Deposit.findAll({
+    const checkRef = await models.Affiliate_Deposit.findOne({
       where: {
         member_uuid_member: member.uuid
       },
-      order: [ 
+      order: [
        ['id', 'desc']
       ],
       limit: 1
     })
 
-    console.log("ch: " + checkRef)
 
-    if (checkRef[0].ref !=  null) {
+    if (checkRef != null) {
+
+
+       // diff date, Dew
+    const date1 = new Date(checkRef.createdAt)
+    const date2 = new Date()
+    const diffTime = Math.abs(date2 - date1)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
       // get total_turn
-      console.log('111');
-      const  response = await axios.post(`${urlConfig}/api/askmebet/winLost`, {
-        username: username,
-        group_id: checkRef[0].ref,
-      }, {
-        headers: {
-        'Content-Type': 'application/json',
-        }
-      }).then(response => response.data)
+      let validAmount = ''
+      if (diffDays < 8) {
+        const  response = await axios.post(`${urlConfig}/api/winLost`, {
+          username: username,
+          refId: checkRef.ref,
+        }, {
+          headers: {
+          'Content-Type': 'application/json',
+          }
+        }).then(response => response.data)
+
+        validAmount = response.data.result.result.summary.validAmount // set total_turn
+      } else {
+        validAmount = 0
+      }
 
       // update total_turn
       await models.Affiliate_Deposit.update({
-        turnover: response.data.result.result.summary.validAmount
+        turnover: validAmount
       }, {
         where: {
-          ref: checkRef[0].ref
+          ref: checkRef.ref
         }
       })
     }
@@ -719,6 +745,351 @@ exports.checkExistTransaction = async (
   } catch (error) { }
 };
 
+// exports.mapBonusPromotion = async (memberUUID, amount) => {
+//   try {
+
+//     console.log(amount);
+
+//     let bonusPromotion;
+//     let today = moment().format("YYYY-MM-DD");
+//     let first_today_deposit = `${today} 00:00:00`;
+//     let second_today_deposit = `${today} 23:59:00`;
+
+//     member = await models.Member.findOne({
+//       where: {
+//         uuid: memberUUID,
+//       },
+//     });
+
+
+//     // check new member
+//     let registerDate = moment(member.register_date).format("YYYY-MM-DD");
+
+//     if (registerDate === today && member.new_member === "1") {
+
+//       let checkBonus = await models.Promotion.findOne({
+//         where: { promotion_type_id: 1, status: 1 },
+//       });
+
+//       if (checkBonus !== null) {
+
+//         const member = await models.Member.update(
+//           {
+//             new_member: "0",
+//           },
+//           {
+//             where: {
+//               uuid: memberUUID,
+//             },
+//           }
+//         );
+
+
+//         if (checkBonus.bonus_type_id === 2) {
+
+//           console.log(`Bonus: ${checkBonus.bonus_type_id}`);
+
+//           bonusPromotion = await models.Promotion.findOne({
+//             where: { promotion_type_id: 1, status: 1, bonus_type_id: 2 },
+//             include: [
+//               {
+//                 model: models.Promotion_Condition,
+//                 as: "promotion_conditions",
+//                 where: {
+//                   min_deposit: {
+//                     [Op.lte]: amount,
+//                   },
+//                   max_deposit: {
+//                     [Op.gte]: amount,
+//                   },
+//                 },
+//               },
+//             ],
+//           });
+
+//           if (bonusPromotion !== null) {
+
+//             let precentBonus = 100 / bonusPromotion.promotion_conditions[0].max_bonus;
+//             let bonusTotal = (amount / precentBonus);
+//             let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+//             let result;
+
+//             if (bonusTotal > bonusPromotion.max_bonus) {
+
+//               result = {
+//                 "bonus": bonusPromotion.max_bonus,
+//                 "uuid": promotion
+//               }
+
+//             } else {
+
+//               result = {
+//                 "bonus": bonusTotal,
+//                 "uuid": promotion
+//               }
+
+//             }
+
+//             return result;
+
+//           } else {
+
+//             let bonusDefault = await models.Promotion.findOne({
+//               where: {
+//                 turnnotpro: 1,
+//               },
+//             });
+
+//             let result = {
+//               "bonus": bonusDefault.max_bonus,
+//               "uuid": bonusDefault.uuid
+//             }
+
+//             return result;
+
+//           }
+
+
+//         } else {
+
+//           console.log(`Bonus: ${checkBonus.bonus_type_id}`);
+//           bonusPromotion = await models.Promotion.findOne({
+//             where: { promotion_type_id: 1, status: 1, bonus_type_id: 1 },
+//             include: [
+//               {
+//                 model: models.Promotion_Condition,
+//                 as: "promotion_conditions",
+//                 where: {
+//                   min_deposit: {
+//                     [Op.lte]: amount,
+//                   },
+//                   max_deposit: {
+//                     [Op.gte]: amount,
+//                   },
+//                 },
+//               },
+//             ],
+//           });
+
+//           if (bonusPromotion !== null) {
+//             let bonusTotal = bonusPromotion.promotion_conditions[0].max_bonus;
+//             let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+//             let result = {
+//               "bonus": bonusTotal,
+//               "uuid": promotion
+//             }
+
+//             return result;
+//           } else {
+
+//             let bonusDefault = await models.Promotion.findOne({
+//               where: {
+//                 turnnotpro: 1,
+//               },
+//             });
+
+//             let result = {
+//               "bonus": bonusDefault.max_bonus,
+//               "uuid": bonusDefault.uuid
+//             }
+
+//             return result;
+
+//           }
+
+//         }
+//       } else {
+
+//         let bonusDefault = await models.Promotion.findOne({
+//           where: {
+//             turnnotpro: 1,
+//           },
+//         });
+
+//         let result = {
+//           "bonus": bonusDefault.max_bonus,
+//           "uuid": bonusDefault.uuid
+//         }
+
+//         return result;
+//       }
+
+
+
+//     }
+//     ///////////////////////////////////////////////////////////////////////////////
+
+//     // check รายการฝากแรกของวัน //
+
+//     let checkBonus = await models.Promotion.findOne({
+//       where: { promotion_type_id: 2, status: 1 },
+//     });
+
+//     if (checkBonus !== null) {
+
+//       const refLatest = await models.Ref_Deposit.findAll({
+//         limit: 1,
+//         where: {
+//           username: member.sb_username,
+//           createdAt: {
+//             [Op.between]: [first_today_deposit, second_today_deposit],
+//           },
+//         },
+//       });
+
+//       if (refLatest.length > 0) {
+
+//         let bonusDefault = await models.Promotion.findOne({
+//           where: {
+//             turnnotpro: 1,
+//           },
+//         });
+
+//         let result = {
+//           "bonus": bonusDefault.max_bonus,
+//           "uuid": bonusDefault.uuid
+//         }
+
+//         return result;
+
+//       } else {
+
+//         if (checkBonus.bonus_type_id === 2) {
+
+//           bonusPromotion = await models.Promotion.findOne({
+//             where: { promotion_type_id: 2, status: 1, bonus_type_id: 2 },
+//             include: [
+//               {
+//                 model: models.Promotion_Condition,
+//                 as: "promotion_conditions",
+//                 where: {
+//                   min_deposit: {
+//                     [Op.lte]: amount,
+//                   },
+//                   max_deposit: {
+//                     [Op.gte]: amount,
+//                   },
+//                 },
+//               },
+//             ],
+//           });
+
+//           if (bonusPromotion !== null) {
+
+//             let precentBonus = 100 / bonusPromotion.promotion_conditions[0].max_bonus;
+//             let bonusTotal = (amount / precentBonus);
+//             let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+//             let result;
+
+//             if (bonusTotal > bonusPromotion.max_bonus) {
+
+//               result = {
+//                 "bonus": bonusPromotion.max_bonus,
+//                 "uuid": promotion
+//               }
+
+//             } else {
+
+//               result = {
+//                 "bonus": bonusTotal,
+//                 "uuid": promotion
+//               }
+
+//             }
+
+//             return result;
+
+//           } else {
+
+//             let bonusDefault = await models.Promotion.findOne({
+//               where: {
+//                 turnnotpro: 1,
+//               },
+//             });
+
+//             let result = {
+//               "bonus": bonusDefault.max_bonus,
+//               "uuid": bonusDefault.uuid
+//             }
+
+//             return result;
+
+//           }
+
+//         } else {
+
+//           console.log(`Bonus: ${checkBonus.bonus_type_id}`);
+//           bonusPromotion = await models.Promotion.findOne({
+//             where: { promotion_type_id: 2, status: 1, bonus_type_id: 1 },
+//             include: [
+//               {
+//                 model: models.Promotion_Condition,
+//                 as: "promotion_conditions",
+//                 where: {
+//                   min_deposit: {
+//                     [Op.lte]: amount,
+//                   },
+//                   max_deposit: {
+//                     [Op.gte]: amount,
+//                   },
+//                 },
+//               },
+//             ],
+//           });
+
+//           if (bonusPromotion !== null) {
+//             let bonusTotal = bonusPromotion.promotion_conditions[0].max_bonus;
+//             let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+//             let result = {
+//               "bonus": bonusTotal,
+//               "uuid": promotion
+//             }
+
+//             return result;
+//           } else {
+
+//             let bonusDefault = await models.Promotion.findOne({
+//               where: {
+//                 turnnotpro: 1,
+//               },
+//             });
+
+//             let result = {
+//               "bonus": bonusDefault.max_bonus,
+//               "uuid": bonusDefault.uuid
+//             }
+
+//             return result;
+
+//           }
+
+//         }
+
+//       }
+
+//     } else {
+
+//       let bonusDefault = await models.Promotion.findOne({
+//         where: {
+//           turnnotpro: 1,
+//         },
+//       });
+
+//       let result = {
+//         "bonus": bonusDefault.max_bonus,
+//         "uuid": bonusDefault.uuid
+//       }
+
+//       return result;
+
+//     }
+
+
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 exports.mapBonusPromotion = async (memberUUID, amount) => {
   try {
 
@@ -747,7 +1118,7 @@ exports.mapBonusPromotion = async (memberUUID, amount) => {
 
       if (checkBonus !== null) {
 
-        const member = await models.Member.update(
+        let member = await models.Member.update(
           {
             new_member: "0",
           },
@@ -901,7 +1272,7 @@ exports.mapBonusPromotion = async (memberUUID, amount) => {
 
     if (checkBonus !== null) {
 
-      const refLatest = await models.Ref_Deposit.findAll({
+      let refLatest = await models.Ref_Deposit.findAll({
         limit: 1,
         where: {
           username: member.sb_username,
@@ -913,18 +1284,142 @@ exports.mapBonusPromotion = async (memberUUID, amount) => {
 
       if (refLatest.length > 0) {
 
-        let bonusDefault = await models.Promotion.findOne({
-          where: {
-            turnnotpro: 1,
-          },
+
+        // ฝากทั้งวัน
+        let checkBonusEvery = await models.Promotion.findOne({
+          where: { promotion_type_id: 3, status: 1 },
         });
-
-        let result = {
-          "bonus": bonusDefault.max_bonus,
-          "uuid": bonusDefault.uuid
+        
+  
+        if(checkBonusEvery !== null) {
+  
+          if (checkBonusEvery.bonus_type_id === 2) {
+  
+            bonusPromotion = await models.Promotion.findOne({
+              where: { promotion_type_id: 3, status: 1, bonus_type_id: 2 },
+              include: [
+                {
+                  model: models.Promotion_Condition,
+                  as: "promotion_conditions",
+                  where: {
+                    min_deposit: {
+                      [Op.lte]: amount,
+                    },
+                    max_deposit: {
+                      [Op.gte]: amount,
+                    },
+                  },
+                },
+              ],
+            });
+  
+            if (bonusPromotion !== null) {
+  
+              let precentBonus = 100 / bonusPromotion.promotion_conditions[0].max_bonus;
+              let bonusTotal = (amount / precentBonus);
+              let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+              let result;
+  
+              if (bonusTotal > bonusPromotion.max_bonus) {
+  
+                result = {
+                  "bonus": bonusPromotion.max_bonus,
+                  "uuid": promotion
+                }
+  
+              } else {
+  
+                result = {
+                  "bonus": bonusTotal,
+                  "uuid": promotion
+                }
+  
+              }
+  
+              return result;
+  
+            } else {
+  
+              let bonusDefault = await models.Promotion.findOne({
+                where: {
+                  turnnotpro: 1,
+                },
+              });
+  
+              let result = {
+                "bonus": bonusDefault.max_bonus,
+                "uuid": bonusDefault.uuid
+              }
+  
+              return result;
+  
+            }
+  
+          } else {
+  
+            console.log(`Bonus: ${checkBonusEvery.bonus_type_id}`);
+            bonusPromotion = await models.Promotion.findOne({
+              where: { promotion_type_id: 3, status: 1, bonus_type_id: 1 },
+              include: [
+                {
+                  model: models.Promotion_Condition,
+                  as: "promotion_conditions",
+                  where: {
+                    min_deposit: {
+                      [Op.lte]: amount,
+                    },
+                    max_deposit: {
+                      [Op.gte]: amount,
+                    },
+                  },
+                },
+              ],
+            });
+  
+            if (bonusPromotion !== null) {
+              let bonusTotal = bonusPromotion.promotion_conditions[0].max_bonus;
+              let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+              let result = {
+                "bonus": bonusTotal,
+                "uuid": promotion
+              }
+  
+              return result;
+            } else {
+  
+              let bonusDefault = await models.Promotion.findOne({
+                where: {
+                  turnnotpro: 1,
+                },
+              });
+  
+              let result = {
+                "bonus": bonusDefault.max_bonus,
+                "uuid": bonusDefault.uuid
+              }
+  
+              return result;
+  
+            }
+  
+          }
+          
+        } else {
+          
+          let bonusDefault = await models.Promotion.findOne({
+            where: {
+              turnnotpro: 1,
+            },
+          });
+    
+          let result = {
+            "bonus": bonusDefault.max_bonus,
+            "uuid": bonusDefault.uuid
+          }
+    
+          return result;
+  
         }
-
-        return result;
 
       } else {
 
@@ -1043,22 +1538,144 @@ exports.mapBonusPromotion = async (memberUUID, amount) => {
 
     } else {
 
-      let bonusDefault = await models.Promotion.findOne({
-        where: {
-          turnnotpro: 1,
-        },
+      let checkBonusEvery = await models.Promotion.findOne({
+        where: { promotion_type_id: 3, status: 1 },
       });
+      
 
-      let result = {
-        "bonus": bonusDefault.max_bonus,
-        "uuid": bonusDefault.uuid
+      if(checkBonusEvery !== null) {
+
+        if (checkBonusEvery.bonus_type_id === 2) {
+
+          bonusPromotion = await models.Promotion.findOne({
+            where: { promotion_type_id: 3, status: 1, bonus_type_id: 2 },
+            include: [
+              {
+                model: models.Promotion_Condition,
+                as: "promotion_conditions",
+                where: {
+                  min_deposit: {
+                    [Op.lte]: amount,
+                  },
+                  max_deposit: {
+                    [Op.gte]: amount,
+                  },
+                },
+              },
+            ],
+          });
+
+          if (bonusPromotion !== null) {
+
+            let precentBonus = 100 / bonusPromotion.promotion_conditions[0].max_bonus;
+            let bonusTotal = (amount / precentBonus);
+            let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+            let result;
+
+            if (bonusTotal > bonusPromotion.max_bonus) {
+
+              result = {
+                "bonus": bonusPromotion.max_bonus,
+                "uuid": promotion
+              }
+
+            } else {
+
+              result = {
+                "bonus": bonusTotal,
+                "uuid": promotion
+              }
+
+            }
+
+            return result;
+
+          } else {
+
+            let bonusDefault = await models.Promotion.findOne({
+              where: {
+                turnnotpro: 1,
+              },
+            });
+
+            let result = {
+              "bonus": bonusDefault.max_bonus,
+              "uuid": bonusDefault.uuid
+            }
+
+            return result;
+
+          }
+
+        } else {
+
+          console.log(`Bonus: ${checkBonusEvery.bonus_type_id}`);
+          bonusPromotion = await models.Promotion.findOne({
+            where: { promotion_type_id: 3, status: 1, bonus_type_id: 1 },
+            include: [
+              {
+                model: models.Promotion_Condition,
+                as: "promotion_conditions",
+                where: {
+                  min_deposit: {
+                    [Op.lte]: amount,
+                  },
+                  max_deposit: {
+                    [Op.gte]: amount,
+                  },
+                },
+              },
+            ],
+          });
+
+          if (bonusPromotion !== null) {
+            let bonusTotal = bonusPromotion.promotion_conditions[0].max_bonus;
+            let promotion = bonusPromotion.promotion_conditions[0].promotion_uuid;
+            let result = {
+              "bonus": bonusTotal,
+              "uuid": promotion
+            }
+
+            return result;
+          } else {
+
+            let bonusDefault = await models.Promotion.findOne({
+              where: {
+                turnnotpro: 1,
+              },
+            });
+
+            let result = {
+              "bonus": bonusDefault.max_bonus,
+              "uuid": bonusDefault.uuid
+            }
+
+            return result;
+
+          }
+
+        }
+        
+      } else {
+        
+        let bonusDefault = await models.Promotion.findOne({
+          where: {
+            turnnotpro: 1,
+          },
+        });
+  
+        let result = {
+          "bonus": bonusDefault.max_bonus,
+          "uuid": bonusDefault.uuid
+        }
+  
+        return result;
+
       }
-
-      return result;
 
     }
 
-
+  
   } catch (error) {
     console.log(error);
   }
@@ -1066,7 +1683,7 @@ exports.mapBonusPromotion = async (memberUUID, amount) => {
 
 exports.hideSmsSCB = async (req, res, next) => {
   try {
-    const status = 2;  // hide 
+    const status = 2;  // hide
     const uuid = req.params.uuid;
 
     const smsTransaction = await models.Sms_Transaction.update(
@@ -1092,7 +1709,7 @@ exports.hideSmsSCB = async (req, res, next) => {
 
 exports.showSmsSCB = async (req, res, next) => {
   try {
-    const status = 0;  // show 
+    const status = 0;  // show
     const uuid = req.params.uuid;
 
     const smsTransaction = await models.Sms_Transaction.update(
@@ -1282,7 +1899,7 @@ exports.insertKbankSms = async (req, res, next) => {
       sms
     );
 
-    if (key === "49nxm") {
+    if (key === "bfz") {
       //check decimal
 
       var result = amount - Math.floor(amount) !== 0;
@@ -1563,3 +2180,6 @@ exports.insertKbankSms = async (req, res, next) => {
 
 
 setInterval(bankdepositController.setInterv, 60000);
+
+
+

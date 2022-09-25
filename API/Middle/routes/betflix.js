@@ -1,0 +1,32 @@
+const express = require('express');
+const router = express.Router();
+
+const betflixController = require('../controllers/betflix');
+
+router.get('/credit/:username', betflixController.getCreditByID);
+router.post('/winlost', betflixController.winLost);
+router.post('/register', betflixController.createUser);
+router.post('/add-deposit', betflixController.deposit);
+router.post('/add-withdraw', betflixController.withdraw);
+router.post('/reset-password', betflixController.resetPassword);
+router.get('/loginGame/:username', betflixController.loginGameLobby);
+router.get('/loginGameWe/:username', betflixController.loginGameLobbyWe);
+router.get('/loginGameXg/:username', betflixController.loginGameLobbyXg);
+router.get('/loginGameEg/:username', betflixController.loginGameLobbyEg);
+router.get('/loginGameCq9/:username', betflixController.loginGameLobbyCq9);
+router.get('/loginGameR88/:username', betflixController.loginGameLobbyR88);
+router.get('/loginGameAmb/:username', betflixController.loginGameLobbyAmb);
+router.get('/loginGameGdg/:username', betflixController.loginGameLobbyGdg);
+router.get('/loginGameGd88/:username', betflixController.loginGameLobbyGd88);
+router.get('/loginGameAg/:username', betflixController.loginGameLobbyAg);
+router.get('/loginGameBg/:username', betflixController.loginGameLobbyBg);
+router.get('/loginGamePs/:username', betflixController.loginGameLobbyPs);
+router.get('/loginGameSp/:username', betflixController.loginGameLobbySp);
+router.get('/loginGameTtg/:username', betflixController.loginGameLobbyTtg);
+router.get('/loginGameSa/:username', betflixController.loginGameLobbySa);
+router.get('/loginGameDg/:username', betflixController.loginGameLobbyDg);
+router.get('/loginGameSexy/:username', betflixController.loginGameLobbySexy);
+router.get('/loginGameWm/:username', betflixController.loginGameLobbyWm);
+router.get('/loginGamePg/:usernamee', betflixController.loginGameLobbyPg);
+router.get('/gamelist/:username/:provider/:code', betflixController.gamelist);
+module.exports = router;

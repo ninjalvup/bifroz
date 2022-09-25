@@ -2,10 +2,10 @@
   <div id="app-backend">
     <Header />
 
-    <div class="container  pt-3" style="padding-bottom: 20%;">
+    <div class="container-fluid mt-1">
     <router-view/>
     </div>
-test
+
     <Footer />
   </div>
 </template>

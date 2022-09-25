@@ -1,0 +1,25 @@
+{
+  "name": "middle-alpha-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./bin/betflix",
+    "start": "pm2 start ./bin/betflix -i max --name 'betflix-api'"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "circular-json": "^0.5.9",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.1",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "flatted": "^3.0.4",
+    "md5": "^2.3.0",
+    "moment": "^2.29.1",
+    "morgan": "~1.9.1",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.4",
+    "randomstring": "^1.1.5"
+  }
+}

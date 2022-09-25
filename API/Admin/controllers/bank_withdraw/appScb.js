@@ -11,6 +11,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const config = require('../../config/index');
 const { async } = require('crypto-random-string');
 const qs = require('qs');
+const urlConfig = "http://localhost:5000";
 
 
 
@@ -354,6 +355,8 @@ exports.withdraw = async (data) => {
       }
     );
 
+    const resultUpdate = await updateAffiliate(data)
+
      return responsfn;
     }else {
         // insert
@@ -371,7 +374,74 @@ exports.withdraw = async (data) => {
     }
 };
 
+exports.updateAffiliate = async (data) => {
 
+  const { uuid } = data
+
+  const withdrawUser = await models.Member_Account_Bank_Transaction.findOne({
+    where: {
+      uuid: uuid,
+    },
+    attributes: ["uuid", "username"],
+  });
+
+  const lastRef = await models.Ref_Deposit.findOne({
+    where: {
+      username: withdrawUser.username,
+    },
+    order: [
+      ['id', 'desc']
+    ],
+    limit: 1
+  });
+
+  // check ref
+  const checkRef = await models.Affiliate_Deposit.findOne({
+    where: {
+      ref: lastRef.ref
+    },
+    order: [
+      ['id', 'desc']
+    ],
+    limit: 1
+  })
+
+    if (checkRef !=  null) {
+
+       // diff date, Dew
+    const date1 = new Date(checkRef.createdAt)
+    const date2 = new Date()
+    const diffTime = Math.abs(date2 - date1)
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+      // get total_turn
+      let validAmount = ''
+      if (diffDays < 8) { // วันที่ check ต้องน้อยกว่า 8 วัน
+        const  response = await axios.post(`${urlConfig}/api/winLost`, {
+          username: withdrawUser.username,
+          refId: checkRef.ref,
+        }, {
+          headers: {
+          'Content-Type': 'application/json',
+          }
+        }).then(response => response.data)
+
+        validAmount = response.data.result.result.summary.validAmount // set total_turn
+      } else {
+        validAmount = 0
+      }
+
+      // update total_turn
+      await models.Affiliate_Deposit.update({
+        turnover: validAmount
+      }, {
+        where: {
+          ref: checkRef.ref
+        }
+      })
+
+    }
+}
 
 exports.code = async (bank) => {
   try {

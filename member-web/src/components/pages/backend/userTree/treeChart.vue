@@ -1,19 +1,27 @@
 <template>
     <div>
         <div class="row justify-content-center">
-            <div class="col-md-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb shadow">
+            <div class="col-md-12"
+            >
+                <nav aria-label="breadcrumb"
+
+                >
+                    <ol class="breadcrumb rounded"
+                    style="background-color: rgb(27, 27, 27);"
+                    >
                         <li class="breadcrumb-item"><router-link to="/home">หนัาหลัก</router-link></li>
-                        <li class="breadcrumb-item active" aria-current="page">ผังองค์กร</li>
+                        <li class="breadcrumb-item active" aria-current="page">สมาชิก</li>
                     </ol>
                 </nav>
             </div>
         </div>
-
+        <sharetap />
         <div class="row mt-2 justify-content-center">
             <div class="col-md-12">
-                <div class="card shadow border-0">
+                <div class="card border-0 rounded"
+
+                style="background-color: rgb(27, 27, 27);"
+                >
                     <div class="card-body rounded">
                         <div class="body genealogy-body genealogy-scroll">
                             <div class="genealogy-tree" id="showUserTree">
@@ -28,9 +36,13 @@
 </template>
 
 <script>
+import sharetap from "../sharedLink/sharetap";
 import userTreeService from "@/services/userTree";
 
 export default {
+    components: {
+    sharetap,
+  },
     data() {
         return {
 
@@ -335,7 +347,7 @@ export default {
 }
 .genealogy-tree li a{
     text-decoration: none;
-    color: #666;
+    color: wheat;
     font-family: arial, verdana, tahoma;
     font-size: 11px;
     display: inline-block;
@@ -368,5 +380,15 @@ export default {
     border-radius: 6px;
     background-color :#000;
     z-index: 1;
+}
+
+</style>
+<style scoped>
+* {
+  color: wheat !important;
+  font-weight: 700 !important;
+}
+.rounded {
+    border-radius: 1.25rem !important;
 }
 </style>

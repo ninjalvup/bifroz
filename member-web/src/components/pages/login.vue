@@ -1,75 +1,107 @@
 <template>
-  <div class="login">
-    <div class="row mt-5">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+  <div class="login"
+  style="
+    height: 100vh;
+"
+  
+  >
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto mt-5 p-0">
         <div class="text-center mb-4">
           <img v-bind:src="logo" class="rounded" alt="..." width="50%" />
-          <!-- <div v-if="logo ==path" >asd</div> -->
         </div>
-        <!-- <div class="text-center">
-          <div class="logo">
-            <img v-bind:src="logo" width="80%" />
-          </div>
-        </div> -->
-        <div class="card-login card-signin my-5">
-          <div class="card-body mb-3 mt-3 p-5">
-            <h6 class="text-fast-auto text-center">เข้าสู่ระบบ</h6>
-            <!-- <h5 class="card-title text-center">Payment Auto </h5> -->
-            <form v-on:submit.prevent="login">
-              <div class="form-label-group">
-                <label for="inputTel">เบอร์โทร</label>
-                <span class="mb-3" style="color: red"> {{ text }}</span>
-                <input
-                  v-model="tel"
-                  type="tel"
-                  class="form-control"
-                  placeholder="กรุณากรอกเบอร์มือถือ"
-                  minlength="8"
-                  maxlength="10"
-                  oninvalid="this.setCustomValidity('กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก')"
-                />
-              </div>
-              <div class="form-label-group mt-2">
-                <label for="inputPassword">รหัสผ่าน</label>
-                <input
-                  v-model="password"
-                  type="password"
-                  id="inputPassword"
-                  class="form-control"
-                  placeholder="กรุณากรอกรหัสผ่าน"
-                  autocomplete="off"
-                  required
-                  oninvalid="this.setCustomValidity('กรุณากรอกหมายเลขโทรศัพท์ให้ครบ')"
-                />
-              </div>
-              <div class="justify-content-center pt-3">
-                <button
-                  type="submit"
-                  value="Login"
-                  class="btn btn-gradient w-100"
-                  :disabled="!tel || !password"
-                >
-                  <i class="fas fa-sign-in-alt fa-lg mr-2"></i>เข้าสู่ระบบ
-                </button>
-              </div>
+        <div class="card-signin my-5 rounded"
 
-              <div class="">
-                <span>
-                  <router-link to="/forgotpassword">
-                    <a class="float-right mt-2 mr-3"
-                      >ลืมรหัสผ่าน ?</a
-                    ></router-link
-                  >
-                </span>
-              </div>
-              <hr class="mt-5" />
-              <button
-                @click="routerRegister"
-                class="btn btn btn-gradient w-100"
+            >
+            <div class="card-body mb-3 mt-3 p-5" >
+            <div
+                class="card-header text-center rounded-top"
+                style="background-color: rgb(0, 0, 0, 0.3) !important"
               >
-                <i class="fas fa-user-plus fa-lg mr-2"></i> สมัครสมาชิก
-              </button>
-            </form>
+                <h5 class="font-weight-bold" style="color: wheat">
+                  เข้าสู่ระบบ
+                </h5>
+              </div>
+            
+
+              <div
+                class="card-header rounded-bottom"
+                style="background-color: rgb(0, 0, 0, 0.3) !important"
+              >
+              <form v-on:submit.prevent="login">
+                <div class="form-label-group">
+                  <label for="inputTel">เบอร์โทร</label>
+                  <span class="mb-3" style="color: red"> {{ text }}</span>
+                  <input
+                    v-model="tel"
+                    type="tel"
+                    class="form-control"
+                    placeholder="กรุณากรอกเบอร์มือถือ"
+                    minlength="8"
+                    maxlength="10"
+                    oninvalid="this.setCustomValidity('กรุณากรอกหมายเลขโทรศัพท์ให้ครบ 10 หลัก')"
+                  />
+                </div>
+                <div class="form-label-group mt-2">
+                  <label for="inputPassword">รหัสผ่าน</label>
+                  <input
+                    v-model="password"
+                    type="password"
+                    id="inputPassword"
+                    class="form-control"
+                    placeholder="กรุณากรอกรหัสผ่าน"
+                    autocomplete="off"
+                    required
+                    oninvalid="this.setCustomValidity('กรุณากรอกหมายเลขโทรศัพท์ให้ครบ')"
+                  />
+                </div>
+                
+                <div class="">
+                  <span>
+                    <router-link to="/forgotpassword">
+                      <a class="float-right mt-2 mr-3 cw"
+                      >ลืมรหัสผ่าน ?</a
+                      ></router-link
+                      >
+                    </span>
+                  </div>
+                  <hr class="mt-4" />
+                  <div class="justify-content-center pt-3">
+
+
+
+
+
+
+                    <button
+                      type="submit"
+                      value="Login"
+                      class="btn w-100"
+                     
+                    >
+                     <img class="img-fluid p-0" src="assets/images/custom/login.png" />
+                    </button>
+                  </div>
+
+
+
+
+                <button
+                  @click="routerRegister"
+                  class="btn w-100 mt-3"
+                 
+                >
+                <img class="img-fluid p-0" src="assets/images/custom/register.png" />
+                </button>
+
+
+
+
+
+
+              </form>
+            </div>
+
           </div>
         </div>
       </div>
@@ -200,16 +232,55 @@ export default {
   -webkit-box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
 }
 .text-fast-auto {
-  color: #0193d7 !important;
+
   font-weight: bold;
 }
-</style>
-<style>
-body {
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  /* background-image: url("../../../public/assets/images/input.jpg"); */
+* {
+  color: wheat;
+  font-weight: 400 !important;
 }
+
+
+.login {
+    height:100%;
+} 
+
+.login {
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-image: url("../../../public/assets/images/input.jpg") !important;
+  background-position: center;
+}
+a {
+  color: #000;
+}
+li {
+  color: #000;
+}
+
+.card-body {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 1px;
+}
+
+.rounded-top {
+  border-top-left-radius: 1.25rem !important;
+  border-top-right-radius: 1.25rem !important;
+}
+.rounded-bottom {
+  border-bottom-right-radius: 1.25rem !important;
+  border-bottom-left-radius: 1.25rem !important;
+}
+
+.card-header {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 6px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+.cw{
+  color:wheat;
+}
+
 </style>

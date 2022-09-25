@@ -3,17 +3,33 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb shadow">
+                    <ol class="breadcrumb shadow"
+                    style="
+            background-image: url(assets/images/custom/bg-menu.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            background-position: center center;
+          ">
                         <li class="breadcrumb-item"><router-link to="/home">หนัาหลัก</router-link></li>
                         <li class="breadcrumb-item active" aria-current="page">รายละเอียดการถอนรายได้</li>
                     </ol>
                 </nav>
             </div>
         </div>
-
+        <sharetap />
         <div class="row mt-2 justify-content-center">
             <div class="col-md-9">
-                <div class="card shadow border-0 mt-4">
+                <div class="card shadow border-0 mt-0"
+                style="
+            background-image: url(assets/images/custom/bg-menu.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            background-position: center center;
+          "
+                
+                >
                     <div class="card-body">
                         <h6>รายละเอียดการถอนรายได้</h6>
                         <hr>
@@ -59,8 +75,11 @@
 </template>
 <script>
 import incomeService from "@/services/withdrawIncome";
-
+import sharetap from "../sharedLink/sharetap";
 export default {
+    components: {
+      sharetap,
+    },
     data() {
         return {
             name: "",
@@ -84,3 +103,10 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+    * {
+      color: #000 !important;
+      font-weight: 700 !important;
+    }
+    </style>

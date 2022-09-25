@@ -1,173 +1,279 @@
 <template>
   <div id="home">
     <!-- ธนาคารฝาก -->
-    <div class="row mt-3 justify-content-center">
+
+    <div
+      class="row justify-content-center"
+      style="margin-top: 100px; margin-bottom: 150px"
+    >
       <div class="col-md-9">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb shadow">
-            <li class="breadcrumb-item">
-              <router-link to="/home">หนัาหลัก</router-link>
-            </li>
-            <li class="breadcrumb-item">
-              <router-link to="/depositlist">ธนาคาร</router-link>
-            </li>
-            <!-- <li class="breadcrumb-item" aria-current="page">
-              <router-link to="/deposit">ฝากเงิน</router-link>
-            </li>-->
-            <li class="breadcrumb-item active" aria-current="page">
-              การฝาก
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-    <div class="row  justify-content-center">
-      <div class="col-md-9">
-        <UserData />
-        <div class="card mt-3 border-0 shadow ">
-          <div class="card-body">
+        <!-- <UserData /> -->
+
+        <div
+          class="card border-0 container p-0"
+          style="background-color: #2a2a2a"
+        >
+          <div class="card-body mt-4 p-0">
             <div class="row">
-              <div class="col-12 col-md-6 ">
-                <h5>
-                  บัญชีธนาคาร <br />
-                  <!-- <span style="font-size: 12px" class="alert alert-danger" role="alert">
-             ลูกค้าที่ใช้บัญชีธนาคารไทยพานิชย์(SCB) กรุณาแจ้งสลิป เพื่อความรวดเร็ว 
-          </span> -->
-                </h5>
-                <div v-for="data in bank" v-bind:key="data.id">
-                  <div
-                    class="d-flex justify-content-start mb-4 mt-2"
-                    v-if="
-                      data.bank_status === '1' &&
-                        data.bank_type === '1' &&
-                        data.type_deposit === '0' &&
-                        data.bank_name !== 'truemoney'
-                    "
-                  >
-                    <img
-                      :src="
-                        require(`./../../../../../public/assets/images/banks/${data.bank_name.toLowerCase()}.png`)
-                      "
-                      width="55"
-                      height="55"
-                      class="icon"
-                    />
-                    <div class="ml-3">
-                      <h6>ชื่อบัญชี:{{ data.bank_account_name }}</h6>
-                      <h6>
-                        <div>
-                          <div v-if="data.bank_name == 'bay'">
-                            <h6>ธนาคาร: ธนาคารกรุงศรีอยุธยา</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'ttb'">
-                            <h6>ธนาคาร: ธนาคารทหารไทยธนชาต (TTB)</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'bbla'">
-                            <h6>ธนาคาร: ธนาคารกรุงเทพ</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'gsb'">
-                            <h6>ธนาคาร: ธนาคารออมสิน</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'kbnk'">
-                            <h6>ธนาคาร: ธนาคารกสิกรไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'ktba'">
-                            <h6>ธนาคาร: ธนาคารกรุงไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'scb'">
-                            <h6>ธนาคาร: ธนาคารไทยพาณิชย์</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'tmb'">
-                            <h6>ธนาคาร: ธนาคารทหารไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'promptpay'">
-                            <h6>ธนาคาร: promptpay</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'baac'">
-                            <h6>ธนาคาร: เพื่อการเกษตรและสหกรณ์การเกษตร</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'cimb'">
-                            <h6>ธนาคาร: ซีไอเอ็มบีไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'citi'">
-                            <h6>ธนาคาร: ซิตี้แบงค์</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'ghb'">
-                            <h6>ธนาคาร:อาคารสงเคราะห์</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'hsbc'">
-                            <h6>ธนาคาร: ฮ่องกงและเซี่ยงไฮ้</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'ibank'">
-                            <h6>ธนาคาร:อิสลามแห่งประเทศไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'icbc'">
-                            <h6>ธนาคาร: สินเอเซีย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'kkp'">
-                            <h6>ธนาคาร: เกียรตินาคิน</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'lhbank'">
-                            <h6>ธนาคาร: แลนด์ แอนด์ เฮ้าส์</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'mizuho'">
-                            <h6>ธนาคาร: มิซูโฮ</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'scbt'">
-                            <h6>ธนาคาร: สแตนดาร์ดชาร์เตอร์ด ประเทศไทย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'TBANK'">
-                            <h6>ธนาคาร: ธนชาต</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'tcd'">
-                            <h6>ธนาคาร: ไทยเครดิตเพื่อรายย่อย</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'tisco'">
-                            <h6>ธนาคาร: ธนาคารทิสโก้</h6>
-                          </div>
-                          <div v-if="data.bank_name == 'uob'">
-                            <h6>ธนาคาร: ธนาคารยูโอบี</h6>
+              <div class="col-12">
+                <p>กรุณาโอนเงินจากบัญชี</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-10">
+                <div class="rounded py-1" style="background-color: #1b1b1b">
+                  <div class="row">
+                    <div class="col-12 p-1">
+                      <div class="row">
+                        <div
+                          class="
+                            col-5
+                            d-flex
+                            align-items-center
+                            justify-content-center
+                          "
+                        >
+                          <div style="text-align: center">
+                            <img id="imgBank" src="" />
                           </div>
                         </div>
-                      </h6>
-                      <h6>เลขบัญชี: {{ data.bank_number }}</h6>
-                      <button
-                        type="button "
-                        class="btn-copy"
-                        @click="copy"
-                        v-clipboard:copy="data.bank_number"
-                      >
-                        คัดลอกหมายเลขบัญชี
-                      </button>
+                        <div class="col-6">
+                          <div class="row">
+                            <div class="col-12">
+                              <div
+                                class="col-12 text-center rounded-pill p-1 mb-1"
+                                style="
+                                  border: 1px solid;
+                                  border-image: wheat;
+                                  background-color: rgb(42, 42, 42);
+                                "
+                              >
+                                <span class="">
+                                  {{ bankAccount }}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <div
+                                class="col-12 text-center rounded-pill p-1"
+                                style="
+                                  border: 1px solid;
+                                  border-image: wheat;
+                                  background-color: rgb(42, 42, 42);
+                                "
+                              >
+                                <span class="">
+                                  {{ name }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div class="col-12 col-md-6  mt-lg-4 ">
-                <div class="text-center ">
-                  <h4><u>จำนวนเงินที่ต้องโอน </u></h4>
-                  <div>
-                    <h4 class="text-danger">
-                      หมายเหตุ: ใช้บัญชีที่สมัครเข้ามาเท่านั้น
-                    </h4>
-                  </div>
-                  <div class=" centershow">
-                    <h3 class="mt-4">{{ amount }} บาท</h3>
-                  </div>
+          <!-- จบท่อนแรก -->
 
-                  <button
-                    type="button "
-                    class="btn-copy"
-                    @click="copyamount"
-                    v-clipboard:copy="amount"
+          <div class="card-body mt-4 p-0">
+            <div class="row">
+              <div class="col-12">
+                <p>กรุณาโอนเงินเข้าบัญชี</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div v-for="data in bank" v-bind:key="data.id">
+                  <div
+                    class="d-flex justify-content-start"
+                    v-if="
+                      data.bank_status === '1' &&
+                      data.bank_type === '1' &&
+                      data.type_deposit === '0' &&
+                      data.bank_name !== 'truemoney'
+                    "
                   >
-                    คัดลอกจำนวนเงิน
-                  </button>
+                    <div class="col-10 p-0">
+                      <div
+                        class="rounded py-1"
+                        style="background-color: #1b1b1b"
+                      >
+                        <div class="row">
+                          <div
+                            class="
+                              col-5
+                              d-flex
+                              align-items-center
+                              justify-content-center
+                            "
+                          >
+                            <div style="text-align: center">
+                              <img
+                                :src="
+                                  require(`./../../../../../public/assets/images/banks/${data.bank_name.toLowerCase()}.png`)
+                                "
+                                width="55"
+                                height="55"
+                                class="icon"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="row">
+                              <div class="col-12 p-1">
+                                <div
+                                  class="
+                                    col-12
+                                    text-center
+                                    rounded-pill
+                                    p-1
+                                    mb-1
+                                  "
+                                  style="
+                                    border: 1px solid;
+                                    border-image: wheat;
+                                    background-color: rgb(42, 42, 42);
+                                  "
+                                >
+                                  <span class="">
+                                    {{ data.bank_number }}
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-12 p-1">
+                                <div
+                                  class="col-12 text-center rounded-pill p-1"
+                                  style="
+                                    border: 1px solid;
+                                    border-image: wheat;
+                                    background-color: rgb(42, 42, 42);
+                                  "
+                                >
+                                  <span class="">
+                                    {{ data.bank_account_name }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-11 text-center p-2">
+                            <span class="mt-4">จำนวนเงิน {{ amount }} บาท</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-2 d-flex align-items-center p-0 m-0">
+                      <img
+                        src="assets/images/custom/copy.png"
+                        type="button"
+                        class="img-fluid"
+                        @click="copy"
+                        v-clipboard:copy="data.bank_number"
+                      />
+                    </div>
+
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="row mt-5">
+            <div class="col-12">
+              <h5>เพื่อความเร็วในการฝาก</h5>
+
+              <p>- กรุณาใช้เลขบัญชีที่ระบุโอนมาเท่านั้น</p>
+              <p>- หลังจากโอนเงินเสร็จ ระบบจะเติมเครดิตเข้าอัตโนมัติ ภายใน 10-30 วินาที</p>
+              <p>- หากเกิน5นาทีแล้วเครดิตยังไม่เข้า กรุณาติดต่อเจ้าหน้าที่</p>
+            </div>
+          </div>
+
+          <!-- <table style="width: 100%">
+        <tr>
+          <td colspan="6" style="text-align: center; padding-bottom: 16px">
+            <h5>ถอนเงิน</h5>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: right; padding-right: 20px">
+            <img id="imgBank" src="" />
+          </td>
+          <td colspan="5" style="text-align: left">
+            <h6>ชื่อบัญชี: {{ name }}</h6>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align: right; padding-right: 20px"></td>
+          <td colspan="5" style="text-align: left">
+            <h6>ธนาคาร: {{ bankName }}</h6>
+            <h6>เลขที่บัญชี: {{ bankAccount }}</h6>
+          </td>
+        </tr>
+      </table> -->
+
+          <!-- <form>
+        <div>
+          <div class="form-group col-12 mx-auto">
+            <h6>จำนวนเงินที่มี: {{ credit2 | formatNumber }} บาท</h6>
+            
+            <label for="formGroupExampleInput">จำนวนเงินที่ต้องการถอน</label>
+            <input
+              type="number"
+              name="amount"
+              id="formGroupExampleInput"
+              v-model="credit"
+              class="form-control text-center col-6 mx-auto"
+              placeholder="กรุณากรอกจำนวนเงิน"
+            />
+            <br />
+            <span v-if="minimum_withdraw > 0" class="border-bottom">
+              หมายเหตุ: จำนวนเงินขั้นต่ำต้องมากกกว่า หรือ เท่ากับ
+              <p class="text-danger">{{ minimum_withdraw }}</p>
+              บาท จึงจะสามารถถอนได้</span
+            >
+        
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12 text-center">
+
+            <button
+              @click.prevent="withdraw"
+              v-if="
+                transaction_status == [] ||
+                transaction_status == 'manual' ||
+                transaction_status == 'Success' ||
+                transaction_status == 'Reject' ||
+                transaction_status == 'Manual' ||
+                transaction_status == 1
+              "
+              value="withdraw"
+              class="btn btn-lg text-center text-white px-5"
+              style="background-color: wheat;border-radius: 25px;color: black !important;"
+              :disabled="
+              this.credit > this.credit2||
+              this.credit < 50"
+            >
+             ยืนยัน
+            </button>
+
+            <span
+              class="text-danger"
+              v-if="
+                (transaction_status == 'Create') | (transaction_status == 0)
+              "
+              >{{ text }}</span
+            >
+          </div>
+        </div>
+      </form> -->
         </div>
       </div>
     </div>
@@ -176,24 +282,149 @@
 
 <script>
 import axios from "axios";
-import UserData from "./../home/user-data";
+// import UserData from "./../home/user-data";
 import { baseURL } from "../../../../services/api";
 // import Swal from "sweetalert2";
+import withdrawService from "@/services/withdrawIncome";
 
 export default {
   components: {
-    UserData,
+    // UserData,
   },
   data() {
     return {
       bank: [],
       checkbank: "",
-      amount: 0,
+      tel: "",
+      first_name: "",
+      last_name: "",
+      bank_name: "",
+      bank_number: "",
+      amount: "",
+      reportdeposit: [],
+      credit: "",
+      credit2: "",
+      transaction_status: "",
+      text: "",
+      status: "",
+      reportwithdraw: "",
+      name: "",
+      bankAccount: "",
+      bankName: "",
+      minimum_withdraw: "",
+      first_name2: "",
+      last_name2: "",
+      tel2: "",
+      bank_name2: "",
+      bank_number2: "",
+      minimum_withdraw2: "",
     };
   },
 
   mounted() {
     this.getamount();
+
+    axios({
+      method: "get",
+      url: baseURL + "/member/reportwithdraw",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        this.reportwithdraw = response.data.data.status;
+        if (response.status === 200) {
+          console.log("");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.data == "Unauthorized") {
+          sessionStorage.removeItem("access_token");
+        }
+      });
+
+    console.log("okdee");
+    axios({
+      method: "get",
+      url: baseURL + "/credit/",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      // .then(() => { //hide
+      .then((response) => {
+        //unhide
+        // this.credit2 = 1000; //hide
+        this.credit2 = response.data.data.credit; //unhide
+        this.credit3 = this.credit2 | this.formatNumber;
+        if (this.credit3 == 0) {
+          this.credit = 0;
+        } else {
+          this.credit = this.credit2;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios({
+      method: "get",
+      url: baseURL + "/member/profile",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        this.first_name2 = response.data.data.first_name;
+        this.last_name2 = response.data.data.last_name;
+        this.tel2 = response.data.data.tel;
+        this.bank_name2 = response.data.data.bank_name;
+        this.bank_number2 = response.data.data.bank_number;
+        this.minimum_withdraw2 = response.data.data.minimum_withdraw;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios({
+      method: "get",
+      url: baseURL + "/member/reportwithdraw",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        this.reportdeposit = response.data.data.status;
+        this.transaction_status =
+          response.data.data.status[0].transaction_status;
+        this.text =
+          "กรุณารอการก่อนหน้านี้อนุมัติก่อนถึงจะสามารถทำการถอนได้อีกครั้ง";
+        if (response.status === 200) {
+          console.log();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios({
+      method: "get",
+      url: baseURL + "/credit/",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        this.credit = response.data.data.sb_username.data.result.credit;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    this.getDataUser();
 
     axios({
       method: "get",
@@ -227,6 +458,15 @@ export default {
     getamount() {
       this.amount = sessionStorage.getItem("amountregular");
     },
+
+    async getDataUser() {
+      // รายละเอียด bank
+      const rs = await withdrawService.getDataUser();
+      this.name = rs.data.bank_account_name;
+      this.bankAccount = rs.data.bank_number;
+      this.bankName = rs.nameBank;
+      document.getElementById("imgBank").setAttribute("src", rs.imgBank);
+    },
   },
 };
 </script>
@@ -253,5 +493,23 @@ export default {
 }
 .centershow {
   margin: auto;
+}
+* {
+  color: wheat !important;
+  font-weight: 300 !important;
+}
+
+.rounded {
+  border-radius: 1.25rem !important;
+      /* border-width: 3px; */
+      border-style: solid;
+    border-color: wheat;
+    border-width: thin;
+    background-color: rgb(27, 27, 27);
+}
+
+.img-fluid {
+    width: 130%;
+    height: auto;
 }
 </style>

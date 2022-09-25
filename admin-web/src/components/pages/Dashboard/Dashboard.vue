@@ -1,164 +1,133 @@
 <template>
-  <div id="dashboard">
+  <div id="smssetting">
     <div class="page-inner">
       <div class="page-header">
         <br />
-        <h4 class="page-title">
-          <i class="fa fa-home" aria-hidden="true"></i> หน้าหลัก
-        </h4>
+        <h4 class="page-title">แดชบอร์ด</h4>
         <ul class="breadcrumbs"></ul>
       </div>
-
       <div class="col-md-12">
-        <div class="col-md-12">
-          <topDashboard />
-        </div>
-        <div>
-          <div class="col-md-12 row">
-            <div class="col-md-7">
-              <underRight />
-            </div>
-            <div class="col-md-5">
-              <div class="card">
-                <div class="card-header bg-primary">
-                  <h4 class="card-title text-white">รายการเดินบัญชีวันนี้</h4>
-                </div>
-                <div class="card-body">
+        <div class="card">
+          <img class="card-img-top" src="holder.js/100x180/" alt="" />
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
                   <div
-                    v-if="
-                      smstable.length <= 0 ||
-                      smstable.length === 0 ||
-                      smstable.length === null
-                    "
+                    class="col-4 py-3 text-center bg-primary rounded text-white"
                   >
-                    <div class="alert alert-danger" role="alert">
-                      ไม่มีรายการเดินบัญชี
-                    </div>
+                    <i class="fas fa-user-plus icon-dashboard h-100"></i>
                   </div>
-                  <div v-for="data in smstable" v-bind:key="data.id">
-                    <div
-                      class="col-md-12 col-sm-12 col-lg-12 ng-scope"
-                      ng-repeat="t in trans"
-                      style=""
-                    >
-                      <div
-                        v-if="data.member_account_bank_transaction != null"
-                        class="row"
-                      >
-                        <div class="col-md-2 col-sm-2 col-lg-2">
-                          <img
-                            :src="
-                              require(`../../../assets/bank_icon/${data.bank_tranfer.toLowerCase()}.png`)
-                            "
-                            alt
-                            class="icon ml-3"
-                            width="40"
-                            height="40"
-                          />
-                        </div>
-                        <div class="col-md-10 col-sm-10 col-lg-10">
-                          <div class="row">
-                            <div class="col-md-6 col-sm-6 col-lg-6">
-                              <span
-                                style="font-weight: bold; font-size: 18px"
-                                class="pull-left ng-binding"
-                                v-if="data.title_tranfer != null"
-                                >{{ data.title_tranfer.toUpperCase() }}</span
-                              >
-                              <span
-                                style="font-weight: bold; font-size: 18px"
-                                class="pull-left ng-binding"
-                                v-if="data.title_tranfer === null"
-                                >SMS</span
-                              >
+                  <div class="col-8 text-center font-dashboard">
+                    <p>สมาชิกใหม่</p>
+                    <p></p>
+                    <p>{{ Number(member.length).toLocaleString() }} คน</p>
+                  </div>
+                </div>
+              </div>
 
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-primary rounded text-white"
+                  >
+                    <i class="fas fa-wallet icon-dashboard h-100"></i>
+                  </div>
+                  <div class="col-8 text-center font-dashboard">
+                    <p>บัญชีถอนคงเหลือ</p>
+                    <p>
+                      {{
+                        Number(
+                          withdrawpending[0].credit_bank_after
+                        ).toLocaleString()
+                      }}
+                      ฿
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-                               <!-- <span
-                                style="font-weight: bold; font-size: 18px"
-                                class="pull-left ng-binding"
-                          
-                                >SMS</span> -->
-                            </div>
-                            <div class="col-md-6 col-sm-6 col-lg-6">
-                              <span class="pull-right ng-binding"
-                                >{{ data.createdAt | formatDate }}
-                              </span>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-12 col-sm-12 col-lg-12">
-                              <p>
-                                <!-- ({{ data.bank_tranfer.toUpperCase() }}) -->
-                                {{ data.sms_content }}
-                                <br />
-                                <span class="badge badge-secondary">
-                                  <a
-                                    class="text-white"
-                                    href="#/home"
-                                    @click="getClipboard"
-                                    v-clipboard:copy="
-                                      data.member_account_bank_transaction
-                                        .username
-                                    "
-                                  >
-                                    {{
-                                      data.member_account_bank_transaction
-                                        .username
-                                    }}
-                                  </a>
-                                  <!-- <a
-                                    href="#/home"
-                                    @click="
-                                      viewAnnotation(
-                                        data.member_account_bank_transaction
-                                          .username
-                                      )
-                                    "
-                                    >{{
-                                      data.member_account_bank_transaction
-                                        .username
-                                    }}
-                                  </a> -->
-                                  ฝาก {{ data.amount }} โบนัส
-                                  {{
-                                    data.member_account_bank_transaction
-                                      .bonus_credit
-                                  }}
-                                  บาท
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-12 col-sm-12 col-lg-12">
-                              <p>
-                                เครดิตก่อนเติม :
-                                <strong>{{
-                                  data.member_account_bank_transaction.credit_before.toFixed()
-                                }}</strong>
-                                <br />
-                                เครดิตหลังเติม :
-                                <strong
-                                  >{{
-                                    data.member_account_bank_transaction.credit_after.toFixed()
-                                  }}
-                                </strong>
-                                <br />
-                                เวลาเติมสำเร็จ :
-                                <strong
-                                  >{{ data.bank_date }} {{ data.bank_time }}
-                                </strong>
-                              </p>
-                              <hr />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-info rounded text-white"
+                  >
+                    <i class="fas fa-university icon-dashboard h-100"></i>
+                  </div>
+                  <div class="col-8 text-center font-dashboard">
+                    <p>ยอดฝากวันนี้</p>
+                    <p></p>
+                    <p>{{ Number(sumdeposit).toLocaleString() }} ฿</p>
+                  </div>
+                </div>
+              </div>
 
-                    <!-- <div class="alert alert-danger" role="alert">
-                        ไม่มีรายการเดินบัญชี
-                      </div> -->
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-info rounded text-white"
+                  >
+                    <i class="fas fa-university icon-dashboard h-100"></i>
+                  </div>
+                  <div class="col-8 text-center font-dashboard">
+                    <p>ยอดถอนวันนี้</p>
+                    <p></p>
+                    <p>{{ Number(amountwithdraw).toLocaleString() }} ฿</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-info rounded text-white"
+                  >
+                    <i class="fas fa-hand-holding-usd icon-dashboard h-100"></i>
+                  </div>
+                  <div class="col-8 text-center font-dashboard">
+                    <p>เติมมือวันนี้</p>
+                    <p></p>
+                    <p>{{ Number(slipCreditTotal).toLocaleString() }} ฿</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-info rounded text-white"
+                  >
+                    <i class="fas fa-hand-holding-usd icon-dashboard h-100"></i>
+                  </div>
+                  <div class="col-8 text-center font-dashboard">
+                    <p>ถอนมือวันนี้</p>
+                    <p></p>
+                    <p>{{ Number(cutCreditTotal).toLocaleString() }} ฿</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 col-lg-3 mt-4">
+                <div class="row d-flex align-items-center bg-light rounded p-2">
+                  <div
+                    class="col-4 py-3 text-center bg-success rounded text-white"
+                  >
+                    <i class="fas fa-piggy-bank icon-dashboard h-100"></i>
+                  </div>
+
+                  <div class="col-8 text-center font-dashboard">
+                    <p>กำไรวันนี้</p>
+                    <p></p>
+                    <p>
+                      {{
+                        Number(
+                          slipCreditTotal +
+                            sumdeposit -
+                            (cutCreditTotal + amountwithdraw)
+                        ).toLocaleString()
+                      }}
+                      ฿
+                    </p>
                   </div>
                 </div>
               </div>
@@ -169,173 +138,224 @@
     </div>
   </div>
 </template>
+  
+  <script>
+import { baseURL } from "./../../../services/api";
+import moment from "moment";
 
-<script>
-import smsService from "@/services/smsService";
-import UserService from "@/services/UserService";
-import topDashboard from "./Top-dashbord";
-import underRight from "./Under-right";
-
+import axios from "axios";
 export default {
-  components: {
-    topDashboard,
-    underRight,
-  },
   data() {
     return {
-      firstname: "",
       username: "",
-      smstable: [],
       role: "",
-      curlSmsTransaction: [],
-      smsNewdata: [],
+      search_type: "",
+      member: [],
+      smstable: [],
+      todaydate: "",
+      todaytime: "",
+      todaytime2: "",
+      withdrawpending: [],
+      depositreport: [],
+      sumdepositreport: "",
+      amountwithdraw: [],
+      slipCreditTotal: "",
+      cutCreditTotal: "",
+      addCreditTotal: "",
+      errlist: "",
+      status: "",
     };
   },
 
-  methods: {
-    async getSMS() {
-      const res = await smsService.getScbSmsTransactionSuccess();
-      // console.log(res.data);
-      this.smstable = res.data;
-      let self = this;
-      setTimeout(async function () {
-        await self.getSMS();
-      }, 5000);
-      // let self = this;
-
-      // const res = await smsService.getScbSmsTransaction();
-      // for (var i = 0; i < res.data.length; i++) {
-      //   // console.log(smsNewdata);
-      //   // if(){
-
-      //   // }
-      //   if (
-      //     res.data[i].status === "1" &&
-      //     res.data[i].member_account_bank_transaction != null
-      //   ) {
-      //     // let smsNewdata = this.smstable.filter((e) => {
-
-      //     //   return e.id = res.data.id
-      //     // });
-      //     // console.log(smsNewdata);
-      //     this.smstable.push({
-      //       id: res.data[i].id,
-      //       uuid: res.data[i].uuid,
-      //       title: res.data[i].member_account_bank_transaction
-      //           .member_account_banks[0].bank_name,
-      //       amount: res.data[i].amount,
-      //       status: res.data[i].status,
-      //       createdAt: res.data[i].createdAt,
-      //       bank_date: res.data[i].bank_date,
-      //       bank_time: res.data[i].bank_time,
-      //       content: res.data[i].sms_content,
-      //       username: res.data[i].member_account_bank_transaction.username,
-      //       bonus: res.data[i].member_account_bank_transaction.bonus_credit,
-      //       credit_before:
-      //         res.data[i].member_account_bank_transaction.credit_before,
-      //       credit_after:
-      //         res.data[i].member_account_bank_transaction.credit_after,
-
-      //       bank_number:
-      //         res.data[i].member_account_bank_transaction
-      //           .member_account_banks[0].bank_number,
-      //       bank_name:
-      //         res.data[i].member_account_bank_transaction
-      //           .member_account_banks[0].bank_name,
-      //     });
-      //   }
-      // }
-      // this.smstable.forEach((element) => {
-      //   // this.curlSmsTransaction.splice(element);
-      //   this.curlSmsTransaction.push(element);
-      // });
-
-      // setTimeout(async function () {
-      //   await self.getSMS();
-      //   // console.log("3");
-      // }, 20000);
-
-      // if (this.curlSmsTransaction.length > 0) {
-      //   this.ishasData = true;
-      // }
-    },
-
-    //     mod
-    //     async getSMS() {
-    //       const res = await smsService.getScbSmsTransaction();
-    //       for (var i = 0; i < res.data.length; i++) {
-    //         if (
-    //           res.data[i].status === "1" &&
-    //           res.data[i].member_account_bank_transaction != null
-    //         ) {
-    //           this.smstable = res.data;
-    //       //      this.smstable.aaa =res.data[i].member_account_bank_transaction.member_account_banks[0].bank_number;
-    //       //  console.log(this.smstable.aaa);
-    //        }
-    //       }
-    //       // this.smsNewdata ="";
-
-    // console.log(this.smstable);
-    //       console.log(this.smstable);
-    //       // this.smsNewdata.splice(0 , this.smsNewdata.length, this.smstable )
-    //       // console.log(this.smsNewdata);
-    //       // const arr1 = this.smstable;
-    //       // const arr2 = this.smsNewdata;
-    //       // const filterArray = (arr1, arr2) => {
-    //       //    const filtered = arr1.filter(el => {
-    //       //       return arr2.indexOf(el) === -1;
-    //       //    });
-    //       //    return filtered;
-    //       // };
-    //       // console.log(filterArray(arr1, arr2));
-    //       // this.curlSmsTransaction = filterArray(arr1, arr2);
-    //       // var arr = this.smstable;
-    //       // var anotherArr = this.smsNewdata;
-
-    //       // Array.prototype.splice.apply(arr, [0, anotherArr.length].concat(anotherArr));
-
-    //       // console.log(arr);
-    //       // console.log(this.curlSmsTransaction);
-    //     },
-
-    async checkAuth() {
-      const res = await UserService.getProfile().catch(function (error) {
-        if (error.response.status === 401 || error.response.status === 500) {
-          const removeToken = localStorage.removeItem("access_token");
-          if (removeToken == null) {
-            this.$router.push("/login");
-          }
-        }
-      });
-      res.logout;
-    },
-    getClipboard() {
-      this.$toast.success("คัดลอก User สำเร็จแล้ว", {
-        position: "top-right",
-        timeout: 1500,
-      });
-    },
-  },
   mounted() {
-    this.checkAuth();
-    // this.newCall();
-    //  let self = this;
-    //  setTimeout( function () {
-    //       console.log("3");
-    //     }, 300);
+    this.getWait();
 
-    // console.log(this.curlSmsTransaction);
+    this.showProfile();
   },
-  beforeMount() {
-    this.getSMS();
+
+  computed: {
+    sumdeposit() {
+      return this.depositreport.reduce((sum, amount) => {
+        return (sum += amount.amount);
+      }, 0);
+    },
   },
-  // prop:
+  methods: {
+    async getWait() {
+      let status = this.status;
+      this.todaydate_lastbank = moment()
+        .day(+4)
+        .locale("th")
+        .format("YYYY-MM-DD");
+      this.todaydate = moment().locale("th").format("YYYY-MM-DD");
+      this.todaytime = moment().locale("th").format("00:00:00");
+      this.todaytime2 = moment().locale("th").format("23:59:59");
+      const t = "T";
+      const z = "";
+      let search_type = this.search_type;
+      const username = "";
+      const start_date = this.todaydate + t + this.todaytime + z;
+      const end_date = this.todaydate + t + this.todaytime2 + z;
+
+      const start_date_lastbank =
+        this.todaydate_lastbank + t + this.todaytime + z;
+      const end_date_lastbank = this.todaydate + t + this.todaytime2 + z;
+
+      const error_type = "";
+      // console.log(this.todaydate)
+
+      // หายอดในบัญชีล่าสุด
+      await axios({
+        method: "get",
+
+        url: `${baseURL}/member_transaction/withdraw-pending-list?start_date=${start_date_lastbank}&end_date=${end_date_lastbank}&status=${status}&username=${username}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((response) => {
+          this.withdrawpending = response.data.data;
+          this.withdrawpending = response.data.data;
+          // console.log(this.withdrawpending)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // เติมมือ ถอนมือ
+      await axios({
+        method: "get",
+        url: `${baseURL}/err_list/?start_date=${start_date}&end_date=${end_date}&username=${username}&error_type=${error_type}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((response) => {
+          this.addCreditTotal = response.data.addCreditTotal[0].totalAmount;
+          this.cutCreditTotal = response.data.cutCreditTotal[0].totalAmount;
+          this.slipCreditTotal = response.data.slipCreditTotal[0].totalAmount;
+          this.errlist = response.data.data;
+          // console.log(this.errlist);
+          // console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // ยอดเติมเงิน
+      axios({
+        method: "get",
+        url: `${baseURL}/report/deposit/?start_date=${start_date}&end_date=${end_date}&username=`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((response) => {
+          this.depositreport = response.data.data;
+          this.sumdepositreport = response.data.data[0].amount;
+
+          // console.log(this.depositreport)
+          // console.log(this.sumdepositreport)
+
+          setTimeout(async function () {
+            await axios();
+          }, 120000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // ถอน
+      axios({
+        method: "get",
+        url: `${baseURL}/report/person/?start_date=${start_date}&end_date=${end_date}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((response) => {
+          this.amountwithdraw = response.data.sumperson.personWithdrawreaamount;
+
+          setTimeout(async function () {
+            await axios();
+          }, 120000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      // this.amountwithdraw = res.data.sumperson.personWithdrawreaamount;
+      // console.log(this.amountwithdraw)
+
+      // หาข้อมูล member
+      axios({
+        method: "get",
+        url: `${baseURL}/member/?start_date=${start_date}&end_date=${end_date}&username=${username}&search_type=${search_type}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then(async (response) => {
+          this.member = await response.data.data;
+          // console.log(this.member)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    // โปรไฟล์
+    showProfile() {
+      axios({
+        method: "get",
+        // url: "http://localhost:3000/api/user/profile",
+        url: `${baseURL}/user/profile`,
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((res) => {
+          // console.log(res);
+          this.username = res.data.data.username;
+          this.role = res.data.data.role;
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+          }
+          if (error.response.status === 401 || error.response.status === 500) {
+            const removeToken = localStorage.removeItem("access_token");
+            if (removeToken == null) {
+              this.$router.push("/login");
+            }
+          }
+        });
+    },
+    logout() {
+      const removeToken = localStorage.removeItem("access_token");
+      if (removeToken == null) {
+        this.$router.push("/login");
+      }
+    },
+  },
 };
 </script>
+
 <style scoped>
-.anyClass {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-y: auto;
+.icon-dashboard {
+  font-size: 4vw;
+}
+p {
+  font-size: 20px;
+  line-height: 1.82 !important;
+  margin-bottom: 0rem !important;
+  word-break: break-word;
 }
 </style>

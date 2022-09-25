@@ -5,11 +5,10 @@ module.exports = (sequelize, DataTypes) => {
     member_uuid_member: DataTypes.STRING,
     amount: DataTypes.DOUBLE,
     percent_value: DataTypes.DOUBLE,
+    status: DataTypes.INTEGER,
     turnover: DataTypes.DOUBLE,
     ref: DataTypes.STRING,
-    status: DataTypes.INTEGER,
     wallet_uuid: DataTypes.STRING,
-
     deposite_date: {
       type:  DataTypes.DATE,
       defaultValue: DataTypes.NOW

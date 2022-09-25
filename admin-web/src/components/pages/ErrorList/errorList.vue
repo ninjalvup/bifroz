@@ -100,6 +100,9 @@
                         v-model="formcut.username"
                         required
                       />
+                      <!-- add -->
+                      <!-- <h6>จำนวนเงินที่มี: {{ credit2 | formatNumber }} บาท</h6> -->
+
                     </div>
                     <div class="form-group row">
                       <label
@@ -110,7 +113,7 @@
                         <span class="required-label">*</span>
                       </label>
                       <input
-                        type="text"
+                        type="amount"
                         class="form-control col-lg-4 col-md-9 col-sm-8"
                         name="amount"
                         id="amount"
@@ -119,6 +122,16 @@
                         v-model="formcut.amount"
                         required
                       />
+                      <!-- <input
+                        type="text"
+                        class="form-control col-lg-4 col-md-9 col-sm-8"
+                        name="amount"
+                        id="amount"
+                        aria-describedby="helpId"
+                        placeholder="จำนวนเครดิต"
+                        v-model="formcut.amount"
+                        required
+                      /> -->
                     </div>
                     <div class="form-group row">
                       <label
@@ -153,8 +166,41 @@
                   role="tabpanel"
                   aria-labelledby="pills-contact-tab-nobd"
                 >
-                  <form v-on:submit.prevent="checkClickedAdd">
+                <!-- add -->
+                  <form v-on:submit.prevent="checkClickedAdd_X">
                     <div class="col-md-12">
+                      
+                      
+                      <div class="row">
+                        <label for="email2_0 ">
+                              ตรวจสอบชื่อผู้ใช้ก่อน :
+                              <span class="required-label">*</span>
+                            </label>
+                            <input
+                              v-model="formadd.username"
+                              class="form-control"
+                              id="email2_0"
+                              placeholder="Username"
+                              required
+                            />
+                            <input type="submit" value="ตรวจสอบบัญชีนี้" 
+                            id = "btn_a" 
+                            class="btn btn-gradient1 float-right"
+                            :disabled="!formadd.username"
+                            /><br/>
+                             <p id = "demo_x"></p>
+
+                      </div>
+                      </div>
+                      </form>
+
+
+                      
+
+                      <!-- done -->
+                      <form v-on:submit.prevent="checkClickedAdd" >
+                      <div class="col-md-12">
+                      <div id ="test_hide" style="visibility: hidden;">
                       <input
                         type="hidden"
                         name="error_list_name"
@@ -178,16 +224,26 @@
                           </div>
                         </div>
                         <div class="col-md-4">
-                          <div class="form-group">
+                          <div class="form-group" >
                             <label for="email2 ">
                               จำนวนเงิน :
                               <span class="required-label">*</span>
                             </label>
-                            <input
+                            <!-- <input
                               type="number"
                               class="form-control"
                               name="amount"
                               id="amount"
+                              aria-describedby="helpId"
+                              placeholder="จำนวนเงิน"
+                              v-model="formadd.amount"
+                              required
+                            /> -->
+                            <input
+                              type="number"
+                              class="form-control"
+                              name="amount"
+                              id="amountadd"
                               aria-describedby="helpId"
                               placeholder="จำนวนเงิน"
                               v-model="formadd.amount"
@@ -261,6 +317,7 @@
                         </button>
                       </div>
                     </div>
+                    <!-- testhidedive --></div> 
                   </form>
 
                   <!-- form -->
@@ -616,6 +673,7 @@
             </thead>
             <tbody style="text-align: center">
               <tr v-for="(data, index) in errlist" v-bind:key="data.uuid">
+              
                 <td>{{ index + 1 }}</td>
                 <td v-if="data.error_list_name === 'เพิ่มเครดิต'">
                   <p class="badge badge-primary">{{ data.error_list_name }}</p>
@@ -671,6 +729,10 @@ import { baseURL } from "../../../services/api";
 import axios from "axios";
 // import router from "@/router";
 import UserService from "@/services/UserService";
+
+import checkmemberService from "@/services/checkmemberService";
+
+// import errorlisttomembercheck from "@/services/errorlisttomembercheck";
 // import Swal from "sweetalert";
 import Swal from "sweetalert2";
 
@@ -723,6 +785,32 @@ export default {
           turn_win: "0",
         },
       },
+      // add new response
+      // formadd: {
+      //   create_by: "",
+      //   username: "",
+      //   amount: "",
+      //   annotation: "",
+      //   createdAt: moment().locale("th").format("YYYY/MM/DD HH:mm"),
+      //   error_list_name: "เพิ่มเครดิต",
+      //   date: moment().locale("th").format("DD/MM HH:mm"),
+      //   turn_over: {
+      //     turn_over_amt:"0",
+      //     turn_over_slot: "0",
+      //     turn_over_hdp: "0",
+      //     turn_over_mix_replay: "0",
+      //     turn_over_mix_step: "0",
+      //     turn_over_bacara: "0",
+      //     turn_over_thai_lotterry: "0",
+      //     turn_over_thai_m2: "0",
+      //     turn_over_thai_multiplayer: "0",
+      //     turn_over: "",
+      //     max_withdraw: "",
+      //     turn_type: 2,
+      //     turn_win: "0",
+      //   },
+      //   bonus_credit: "0",
+      // },
 
       formadd: {
         create_by: "",
@@ -745,6 +833,7 @@ export default {
           max_withdraw: "",
           turn_type: 2,
           turn_win: "0",
+          // total_amt:"",
         },
         bonus_credit: "0",
       },
@@ -769,12 +858,15 @@ export default {
     };
   },
   mounted() {
+    
     this.getMount();
   },
   methods: {
     onChange(event) {
       let data = event.target.value;
+      
       console.log(data);
+
     },
     async getErrorTypeAll() {
       const t = "T";
@@ -802,10 +894,12 @@ export default {
           console.log(error);
         });
     },
+
     async getErrorTypeAdd() {
       const t = "T";
       const z = "";
       const username = this.username;
+
       const start_date = this.yesterdate + t + this.yestertime + z;
       const end_date = this.todate + t + this.totime + z;
       const error_type = this.errortypeadd;
@@ -828,9 +922,12 @@ export default {
         });
     },
     async getErrorTypeCut() {
+      
       const t = "T";
       const z = "";
       const username = this.username;
+      
+
       const start_date = this.yesterdate + t + this.yestertime + z;
       const end_date = this.todate + t + this.totime + z;
       const error_type = this.errortypecut;
@@ -852,10 +949,14 @@ export default {
           console.log(error);
         });
     },
+
     async getErrorTypeSlip() {
+      
       const t = "T";
       const z = "";
       const username = this.username;
+      
+
       const start_date = this.yesterdate + t + this.yestertime + z;
       const end_date = this.todate + t + this.totime + z;
       const error_type = this.errortypeslip;
@@ -913,7 +1014,7 @@ export default {
           this.slipCreditTotal = response.data.slipCreditTotal[0].totalAmount;
           this.errlist = response.data.data;
           // console.log(this.errlist);
-          // console.log(response.data.data);
+          // console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -933,12 +1034,129 @@ export default {
           }
         }
       });
+      // admin
+      // console.log('line 987')
+      // console.log(res)
       this.formadd.create_by = res.data.username;
       this.formcut.create_by = res.data.username;
       this.formslip.create_by = res.data.username;
     },
-    async submitAddCreditForm() {
+    // add
+    async submitCheckUser(){
+
+      let checkCode = document.getElementById("email2_0");
+
+
+      const res  = await checkmemberService.getCheckByUuid_X(checkCode)
+      .catch((error) => {
+          // console.log(error.message);
+          console.log(error);
+          document.getElementById("demo_x").innerHTML = "ไม่สามารถเพิ่มเครดิตได้ เนื่องจากผู้ใช้ไม่เคยมียอดฝาก";
+          // console.log(res);
+
+          this.checkCode = "";
+          error.res;
+        });
+      this.thiscredit = res.user[0].credit;
+      var btnVisible = document.getElementById("test_hide");
+
+      if (this.thiscredit>=10){
+        btnVisible.style.visibility = "hidden";
+        document.getElementById("demo_x").innerHTML = "ไม่สามารถเพิ่มเครดิตได้ เนื่องจากผู้ใช้มียอดคงเหลือมากกว่า10บาท";
+
+        checkCode.value="";
+      } else{
+
+        btnVisible.style.visibility = "visible";
+        document.getElementById("demo_x").innerHTML = "";
+
+  
+        this.turnover =
+          res.deposit_latest_one_with_promotion.ref_turn_over.error_list_turnover;
+        // console.log(this.turnover);
+        
+        console.log('1023')
+        console.log(this.turnover.turn_over);
+
+        checkCode.value="";
+        
+      }
+    },
+    // done submitCheckUser
+  async submitAddCreditForm() {
+      //////////// add
+      let checkCode = document.getElementById("email2_0");//user 1
+      let checkTurn = document.getElementById("2"); //0 //1 // 2 // 1
+      let checkamount = document.getElementById("amountadd"); //1 //1 //3 //5
+      let res  = await checkmemberService.getCheckByUuid_X(checkCode)
+      console.log(res)
+      let x_turnval = res.deposit_latest_one_with_promotion.ref_turn_over.error_list_turnover.turn_over;//0 // 0 //1 // 2
+
+      let x_turnval_X = res.deposit_latest_one_with_promotion.ref_turn_over.error_list_turnover.turn_over;//0 // 0 //1 // 2
+      // console.log(this.annotation)
+      console.log("x_turnval"+x_turnval)
+      // console.log(res)
+      console.log('2.checkTurn : '+ checkTurn.value)
+      console.log('3.checkamount : '+ checkamount.value)
+
+      function checkFirstLetterNumber(_string)
+        {
+        return _string.match(new RegExp(/^\d/)) !== null;    
+        }
+
+      let xx = res.deposit_latest[0].annotation
+      console.log('xx'+xx)
+      if(checkFirstLetterNumber(res.deposit_latest[0].annotation)){
+        x_turnval = xx.split(/\s(.+)/)[0];
+        console.log('x_turnval in IF :'+ x_turnval)
+      } else{
+        x_turnval = 0;
+        console.log('x_turnval in ELSE :'+ x_turnval)
+      }
+
+      let update_turn_amt='';
+      let update_final_turn_amt ='';
+      let new_turnover_val='';
+
+      // //อัพเดทยอดที่ต้องทำก่อนหน้าและปัจจุบัน (รวม)
+      update_turn_amt = Number(checkamount.value)*Number(checkTurn.value);//1*0 = 0 // 1*1 = 1 // 3*2 =6 // 5*1 =5
+      update_final_turn_amt = Number(x_turnval)+Number(update_turn_amt); //0+0 = 0 // 1+0 =1 // 6+1 =7 // 5+7 = 12
+      console.log('4.ยอดที่ต้องทำเมื่อเติมเครดิต b4 checkamountXcheckTurn '+update_turn_amt)
+      console.log('5.ยอดที่ต้องทำเมื่อเติมเครดิต final x_turnvalXupdate_turn_amt '+update_final_turn_amt)
+
+      if (Number(x_turnval_X)>Number(checkTurn.value)){
+        console.log('IF')
+        new_turnover_val = Number(x_turnval_X);
+        console.log(new_turnover_val)
+      } else if(Number(x_turnval_X)==0 && Number(checkTurn.value)==0){
+        new_turnover_val = 0;
+        console.log('ELIF1')
+        console.log(new_turnover_val)
+        }
+        else { 
+        console.log('ELSE')
+        new_turnover_val = Number(checkTurn.value);
+        console.log(new_turnover_val)
+        }
+
+        if (update_final_turn_amt == null||update_final_turn_amt == 0||update_final_turn_amt == "0")
+        {
+          this.formadd.turn_over.turn_over = new_turnover_val;
+          update_final_turn_amt = 0;
+          this.formadd.annotation = update_final_turn_amt.toString().concat(" ", this.formadd.annotation);
+        }else{
+        this.formadd.turn_over.turn_over = new_turnover_val;
+        this.formadd.annotation = update_final_turn_amt.toString().concat(" ", this.formadd.annotation);
+        }
+        // console.log(res)
+
       
+
+
+      //unhide this to reset turnover value in formadd
+      // this.formadd.turn_over.turn_over ="0";
+      ////////// done
+
       axios
         .post(baseURL + "/err_list", this.formadd, {
           headers: {
@@ -946,8 +1164,12 @@ export default {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },
         })
-        .then(() => {
+        // .then(() => {
+          .then((response) => {
+          this.xx = response.data;
           this.isLoading = true;
+          console.log('xx')
+          console.log(this.xx)
 
           this.errlist = [];
           this.getMount();
@@ -956,8 +1178,11 @@ export default {
             timeout: 1500,
             icon: true,
             rtl: false,
+
           });
           // router.push("/errorlist");
+          // clear form
+
           this.formadd.username = "";
           this.formadd.amount = "";
           this.formadd.annotation = "";
@@ -965,6 +1190,12 @@ export default {
           this.formadd.turn_over.turn_win = "";
           this.formadd.turn_over.turn_type = "";
           this.formadd.turn_over.max_withdraw = "";
+          // console.log('line 1053')
+          // console.log(this.formadd.turn_over)
+          // console.log(this.formadd.turn_over.turn_over)
+
+          // const addVal_X = Number(x_turnval)+Number(checkTO.value)
+          // console.log(addVal_X)
         })
         .catch((error) => {
           console.log(error);
@@ -991,7 +1222,7 @@ export default {
         Swal.fire({
           title: "กรุณารอสักครู่",
           // text: "ประมาณ 1 - 2 นาที",
-          imageUrl: "https://media3.giphy.com/media/12MhwQm8toOEp2/source.gif",
+          // imageUrl: "https://media3.giphy.com/media/12MhwQm8toOEp2/source.gif",
           imageWidth: 300,
           imageHeight: 200,
 
@@ -1073,7 +1304,7 @@ let timerInterval;
         Swal.fire({
           title: "กรุณารอสักครู่",
           // text: "ประมาณ 1 - 2 นาที",
-          imageUrl: "https://media3.giphy.com/media/12MhwQm8toOEp2/source.gif",
+          // imageUrl: "https://media3.giphy.com/media/12MhwQm8toOEp2/source.gif",
           imageWidth: 300,
           imageHeight: 200,
 
@@ -1155,6 +1386,12 @@ this.time ="I was closed by the timer";          }
     checkClickedCut() {
       this.$confirm("ยืนยันการตัดเครดิต?").then(() => {
         this.submitCutCreditForm();
+      });
+    },
+    // add function check username
+    checkClickedAdd_X(){
+      this.$confirm("ยืนยันการตรวจสอบ?").then(() => {
+        this.submitCheckUser();
       });
     },
     checkClickedAdd() {
@@ -1297,5 +1534,15 @@ this.time ="I was closed by the timer";          }
     opacity: 0;
     visibility: hidden;
   }
+}
+.btn-gradient1 {
+  /* background-image: linear-gradient(270deg, rgb(89, 194, 247), #008fcc); */
+  background-color:  #008fcc; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-width: 0;
+
+  color: white !important;
 }
 </style>

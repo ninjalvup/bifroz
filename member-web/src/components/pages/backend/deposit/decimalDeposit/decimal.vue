@@ -3,41 +3,79 @@
     <!-- ฝากทศนิยม -->
     <br />
 
-    <div class="row justify-content-center">
-      <div class="col-md-9">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb shadow">
-            <li class="breadcrumb-item">
-              <router-link to="/home">หนัาหลัก</router-link>
-            </li>
-            <li class="breadcrumb-item">
-              <router-link to="/depositlist">เลือกการฝาก</router-link>
-            </li>
-            <!-- <li class="breadcrumb-item" aria-current="page">
-              <router-link to="/deposit">ฝากเงิน</router-link>
-            </li>-->
-            <li class="breadcrumb-item active" aria-current="page">
-              ฝากทศนิยม
-            </li>
-          </ol>
-        </nav>
+
+    <div class="row"
+    style="
+    margin-top: 70px;
+"
+    >
+    <div class="col-4 p-3">
+        <router-link v-if="bank_name === 'kbnk'" to="/decimal" class="">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-1.png"
+            alt=""
+          />
+        </router-link>
+
+
+        <router-link v-if="bank_name !== 'kbnk'" to="/bankInfo" class="">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-1.png"
+            alt=""
+          />
+        </router-link>
+      </div>
+
+      <div class="col-4 p-3">
+        <router-link to="/withdraw">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-2.png"
+            alt=""
+          />
+        </router-link>
+      </div>
+
+      <div class="col-4 p-3">
+        <router-link to="/report">
+          <img
+            class="img-fluid w-100"
+            src="assets/images/custom/aff-menu-3.png"
+            alt=""
+          />
+        </router-link>
       </div>
     </div>
 
-    <div class="row mt-2 justify-content-center">
+
+    <div
+      class="row justify-content-center"
+      style="margin-bottom: 100px"
+    >
       <div class="col-md-9">
-        <div class="card shadow border-0">
-          <div class="card-body border-0 rounded">
-            <div class="card border-0">
-              <div class="card-header">
-                <h5>ฝากเงิน</h5>
+        <div class="card border-0">
+          <div class="card-body border-0 p-0" style="background-color: #1b1b1b">
+            <div class="card border-0" style="background-color: #2a2a2a">
+              <div
+                class="card-header text-center rounded-top"
+                style="background-color: #1b1b1b !important"
+              >
+                <h5 class="font-weight-bold" style="color: wheat">
+                  กรอกรายละเอียดการโอนเงิน
+                </h5>
               </div>
-              <div class="card-body">
+              <div
+                class="card-body border border-dark rounded-bottom"
+                style="background-color: #1b1b1b"
+              >
                 <form>
                   <div class="form-row">
                     <div class="form-group col-md-12">
-                      <label>จำนวนเงิน </label><br />
-                      <!-- <label >บัญชีที่รับเงิน : 0884092629</label> -->
+                      <label class="font-weight-bold" style="color: wheat"
+                        >จำนวนเงิน </label
+                      ><br />
                       <input
                         v-model="amount"
                         type="number"
@@ -45,29 +83,22 @@
                         placeholder="กรุณากรอกจำนวนเงิน"
                         required
                       />
-                      <h6 class="text-danger mt-2 pl-2">ฝากขั้นต่ำ 1 บาท</h6>
-                      <!-- <br>
-                        <div class="btnamount">
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(50)">50</button>
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(100)">100</button>
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(300)">300</button>
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(500)">500</button>
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(1000)">1,000</button>
-                          <button type="button" class="btn btnselect" v-on:click="sentvalue(5000)">5,000</button>
-                        </div> -->
+                      <h6
+                        class="mt-2 pl-2 font-weight-bold"
+                        style="color: wheat"
+                      >
+                        ฝากขั้นต่ำ 1 บาท
+                      </h6>
                     </div>
                   </div>
                   <div class="row mt-3">
                     <div class="col-md-12 text-center">
                       <button
                         @click.prevent="depositDecimal"
-                        class="
-                          btn btn-blue btn-lg
-                          rounded-pill
-                          text-center text-white
-                        "
+                        class="btn-lg rounded-pill text-center"
+                        style="background-color: wheat; font-weight: bold"
                       >
-                        <i class="fas fa-check-circle"></i> ทำรายการต่อไป
+                        ทำรายการ
                       </button>
                     </div>
                   </div>
@@ -78,19 +109,76 @@
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   </div>
 </template>
 <script>
 import bankService from "./../../../../../services/bankService";
+import { baseURL } from "./../../../../../services/api";
+import axios from "axios";
 export default {
   data() {
     return {
       amount: "",
       balancet: "",
+      bankName: "",
+      bank_name: "",
     };
   },
   props: ["balance"],
+  mounted() {
+
+    axios({
+      method: "get",
+      url: baseURL + "/member/profile",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        this.first_name = response.data.data.first_name;
+        this.last_name = response.data.data.last_name;
+        this.tel = response.data.data.tel;
+        this.bank_name = response.data.data.bank_name;
+        this.bank_number = response.data.data.bank_number;
+        this.minimum_withdraw = response.data.data.minimum_withdraw;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
   methods: {
+    
     sentvalue(value) {
       this.amount = value;
     },
@@ -131,5 +219,13 @@ export default {
   margin-bottom: 0;
   background-color: rgb(255 255 255);
   border-bottom: 1px solid rgb(197 197 197 / 13%);
+}
+* {
+  color: #000;
+  font-weight: 700 !important;
+}
+
+button{
+  color: #000;
 }
 </style>

@@ -44,7 +44,7 @@ exports.register = async (req, res, next) => {
         });
 
         if (existtel) {
-            const error = new Error('มีหมายเลขโทรศัพท์นี้ในระบบแล้ว');
+            const error = new Error('มีtelนี้ในระบบแล้ว');
             error.statusCode = 400;
             throw error;
         }

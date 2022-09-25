@@ -5,16 +5,14 @@ const urlConfig = "http://localhost:5000";
 exports.creatUser = async (tel, password, contact) => {
   try {
 
-    console.log(tel, password, contact);
-
-    const response = await axios.post(`${urlConfig}/api/askmebet/register`, {
+    const response = await axios.post(`${urlConfig}/api/register`, {
       "tel": tel,
       "password": password,
       "contact": contact,
    });
 
    console.log(response);
-  
+
     return response;
 
   } catch (error) {
@@ -25,21 +23,21 @@ exports.creatUser = async (tel, password, contact) => {
 exports.getCredit = async (user) => {
   try {
 
-    const response = await axios.get(`${urlConfig}/api/askmebet/credit/${user}`);
+    const response = await axios.get(`${urlConfig}/api/credit/${user}`);
 
     return response.data;
 
   } catch (error) {}
 };
 
-exports.deposit = async (amount, _id) => {
+exports.deposit = async (amount, username) => {
   try {
 
-    console.log(amount, _id);
-  
-    const response = await axios.post(`${urlConfig}/api/askmebet/add-deposit`, {
+    console.log(amount, username);
+
+    const response = await axios.post(`${urlConfig}/api/add-deposit`, {
             "amount": amount,
-            "id": _id
+            "username": username
     });
 
     console.log(response);
@@ -51,12 +49,12 @@ exports.deposit = async (amount, _id) => {
   }
 };
 
-exports.withdraw = async (amount, _id) => {
+exports.withdraw = async (amount, username) => {
   try {
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/add-withdraw`, {
+    const response = await axios.post(`${urlConfig}/api/add-withdraw`, {
         "amount": amount,
-        "id": _id
+        "username": username
       }
     );
 
@@ -69,14 +67,14 @@ exports.withdraw = async (amount, _id) => {
   }
 };
 
-exports.winlose = async (username, groupId, dateTimeFrom, dateTimeTo) => {
+exports.winlose = async (username, refId, dateTimeFrom, dateTimeTo) => {
   try {
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/winlost`, {
-      "username": username , 
-      "group_id": groupId,
-      "dateTimeFrom": dateTimeFrom, 
-      "dateTimeTo": dateTimeTo 
+    const response = await axios.post(`${urlConfig}/api/winlost`, {
+      "username": username ,
+      "refId": refId,
+      "dateTimeFrom": dateTimeFrom,
+      "dateTimeTo": dateTimeTo
     });
 
     console.log(response);
@@ -88,12 +86,12 @@ exports.winlose = async (username, groupId, dateTimeFrom, dateTimeTo) => {
   }
 };
 
-exports.resetPassword = async (username, password) => {
+exports.resetPassword = async (username, newPassword) => {
   try {
 
-    const response = await axios.post(`${urlConfig}/api/askmebet/reset-password`, {
-      "username": username , 
-      "password": password,
+    const response = await axios.post(`${urlConfig}/api/reset-password`, {
+      "username": username ,
+      "newPassword": newPassword,
     });
 
     console.log(response);

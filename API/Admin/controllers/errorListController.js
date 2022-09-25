@@ -373,6 +373,7 @@ exports.create = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
@@ -491,8 +492,8 @@ exports.addDefaultTurnOver = async (refDeposit) => {
       turn_over_thai_m2: 1,
       turn_over_thai_multiplayer: 1,
       max_withdraw: 10000,
-      turn_win: 1,
-      turn_over: 1,
+      turn_win: 0,
+      turn_over: 0,
       turn_type: 2,
       ref_deposit_uuid: refDeposit,
     });

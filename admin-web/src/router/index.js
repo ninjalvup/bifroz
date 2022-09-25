@@ -6,7 +6,8 @@ import testonproject from "../components/pages/testonproject.vue";
 import Login from "../components/Login.vue";
 
 
-import dashboard from '../components/pages/Dashboard/Dashboard.vue'
+import dashboard from '../components/pages/dashboard/dashboard.vue'
+import home from '../components/pages/home/Dashboard.vue'
 import User from "../components/pages/User/User.vue";
 import firstDeposit from "../components/pages/User/firstDeposit.vue";
 
@@ -113,13 +114,19 @@ export default new VueRouter({
           path: '/home',
           name: 'home',
           beforeEnter: guardMyroute,
-          component: dashboard
+          component: home
         },
         {
           path: '/user',
           name: 'user',
           beforeEnter: guardMyroute,
           component: User
+        },
+        {
+          path: '/dashboard',
+          name: 'dashboard',
+          beforeEnter: guardMyroute,
+          component: dashboard
         },
         {
           path: '/errorlist',

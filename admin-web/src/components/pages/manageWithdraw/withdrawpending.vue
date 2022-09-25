@@ -217,7 +217,7 @@
                     <!-- <th>รีเซ็ต</th> -->
                     <th>ถอนมือ</th>
                     <th>สลิป</th>
-                    <th>เปลี่ยนสถานะ</th>
+                    <!--<th>เปลี่ยนสถานะ</th>-->
                   </tr>
                 </thead>
                 <tbody style="text-align: center">
@@ -306,7 +306,7 @@
                           <span class="badge badge-warning">ถอน</span>
                         </div>
                       </td> -->
-                    <td>{{ data.bank_time }}</td>
+                    <td>{{ data.createdAt | formatDate }}</td>
                     <td>{{ data.updatedAt | formatDate }}</td>
 
                     <td>
@@ -970,7 +970,7 @@ export default {
       console.log(pageNum);
     },
     passSlip(data) {
-      console.log(data.transaction_slip);
+      // console.log(data.transaction_slip);
       this.slipImg = data.transaction_slip;
     },
     async checkAuth() {
@@ -1014,6 +1014,9 @@ export default {
           // this.withdrawpending = [];
           this.withdrawpending = response.data.data;
           this.withdrawpending = response.data.data;
+          
+
+          // console.log(this.withdrawpending)
           if (this.firstData < this.withdrawpending.length) {
             let self = this;
             self.playAudio();

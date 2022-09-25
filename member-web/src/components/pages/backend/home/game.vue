@@ -69,6 +69,15 @@ export default {
     return {};
   },
   methods: {
+    logout() {
+      const removeToken = sessionStorage.removeItem("access_token");
+      sessionStorage.removeItem("token");
+      sessionStorage.clear();
+      location.reload();
+      if (removeToken == null) {
+        this.$router.push("/login");
+      }
+    },
     routerCasino() {
       this.$router.push("/casino");
     },
@@ -82,9 +91,8 @@ export default {
       if (!sessionStorage.getItem("token")) {
         return false;
       } else {
-        axios.defaults.headers.common["Authorization"] = sessionStorage.getItem(
-          "token"
-        );
+        axios.defaults.headers.common["Authorization"] =
+          sessionStorage.getItem("token");
         return true;
       }
     },
@@ -186,16 +194,16 @@ export default {
 </script>
 
 <style scoped>
-.pl-3, .px-3 {
-    padding-left: 2rem !important;
+.pl-3,
+.px-3 {
+  padding-left: 2rem !important;
 }
 .game {
-    border-radius: 30%;
-    width: 110px;
-    cursor: pointer;
-    border: 3px solid #dee2e6;
-    border-color: #00a4e4;
+  border-radius: 30%;
+  width: 110px;
+  cursor: pointer;
+  border: 3px solid #dee2e6;
+  border-color: #00a4e4;
 }
-
 </style>
 

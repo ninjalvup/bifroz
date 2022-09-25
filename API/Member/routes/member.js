@@ -59,6 +59,8 @@ router.post('/header', memberController.header);
 router.post('/forgotpassword', memberController.forgotpassword);
 router.post('/updatepw', memberController.forgotpasswordupdate);
 
+// launch game
+router.post('/launch-game', [passportJWT.isLogin], memberController.launchGame);
 
 
 module.exports = router;

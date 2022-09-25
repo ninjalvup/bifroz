@@ -1270,29 +1270,34 @@ exports.changPassword = async (req, res, next) => {
 
     const response = await askmebetController.resetPassword(m.sb_username, passwordRandom);
 
-    const member = await models.Member.update(
-      {
-        password: passwordHash,
-        sb_password: passwordRandom
-      },
-      {
-        where: {
-          uuid: uuid,
-        },
-      }
-    );
+    if(response.data.status === 0){
 
-    if (member[0] === 0) {
-      const error = new Error("ไม่พบรหัสข้อมูลนี้");
-      error.statusCode = 404;
-      throw error;
-    }
+      const member = await models.Member.update(
+        {
+          password: passwordHash,
+          sb_password: passwordRandom
+        },
+        {
+          where: {
+            uuid: uuid,
+          },
+        }
+      );
+
+      if (member[0] === 0) {
+        const error = new Error("ไม่พบรหัสข้อมูลนี้");
+        error.statusCode = 404;
+        throw error;
+      }
+
+    } 
 
     res.status(200).json({
       data: {
         new_password: passwordRandom,
       },
     });
+
   } catch (error) {
     next(error);
   }

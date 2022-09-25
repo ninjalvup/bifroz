@@ -1,6 +1,6 @@
 <template>
   <div id="app-layout">
-     <div class="container pt-3" style="padding-bottom: 20%;">
+     <div class="container p-0">
       <router-view/>
      </div>
     <!-- <Footer/> -->

@@ -1020,7 +1020,7 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 import { baseURL } from "../../../services/api";
 import UserService from "@/services/UserService";
 import swal from "sweetalert";
@@ -1136,6 +1136,9 @@ export default {
     })
       .then(async (response) => {
         this.member = await response.data.data;
+        console.log('user');
+        console.log(`${baseURL}/member/?start_date=${start_date}&end_date=${end_date}&username=${username}&search_type=${search_type}`);
+        
       })
       .catch((error) => {
         console.log(error);

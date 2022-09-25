@@ -4,28 +4,28 @@
     <div class="row mt-3 justify-content-center">
       <div class="col-md-9">
         <nav aria-label="breadcrumb">
-          <ol class="breadcrumb shadow">
+          <ol class="breadcrumb">
             <li class="breadcrumb-item">
               <router-link to="/home">หนัาหลัก</router-link>
             </li>
             <li class="breadcrumb-item">
               <router-link to="/profile">โปรไฟล์</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">เปลี่ยนรหัสผ่าน</li>
+            <li class="breadcrumb-item " aria-current="page">เปลี่ยนรหัสผ่าน</li>
           </ol>
         </nav>
       </div>
     </div>
-    <div class="row mt-2 justify-content-center">
+    <div class="row mt-2 justify-content-center mb-5">
       <div class="col-md-9">
-        <div class="card shadow border-0">
-          <div class="card-body border-0 ">
-            <div class="card border-0  mt-4">
-              <div class="card-header pr-5 pl-5">
-                <h5>เปลี่ยนรหัสผ่าน</h5>
+        <div class="card border-0">
+          <div class="card-body border-0" style="background-color: #2a2a2a">
+            <div class="card border-0 mt-4" style="background-color: #2a2a2a">
+              <div class="pr-5 pl-5">
+                <h5 class="text-center">เปลี่ยนรหัสผ่าน</h5>
               </div>
               <div class="card-body">
-                <div class="row ">
+                <div class="row">
                   <div class="form-group col-md-12">
                     <label>รหัสผ่านเดิม</label>
                     <input
@@ -34,6 +34,7 @@
                       class="form-control"
                       placeholder="กรุณากรอกรหัสผ่านเดิม"
                       autocomplete="off"
+                      style="background-color: rgb(27, 27, 27);"
                     />
                   </div>
                 </div>
@@ -46,22 +47,35 @@
                       class="form-control"
                       placeholder="กรุณากรอกรหัสผ่านใหม่"
                       autocomplete="off"
+                      style="background-color: rgb(27, 27, 27);"
                     />
-                    <span>รหัสผ่านต้องใช้ 8 ตัวขึ้นไปที่มีทั้งตัวเลข (0-9) เเละตัวอักษร (a-z,A-z)ห้ามใช้อักขระพิเศษ</span>
+                    <br>
+
                   </div>
                 </div>
-                <div class="row mt-3">
-                  <div class="col-md-12 text-center">
-                    <button
+                <div class="row">
+                  <div class="col-md-12 text-center mt-1">
+                <span 
                       @click.prevent="passwordchang"
                       value="passwordchang"
                       type="password"
-                      class="btn btn-blue btn-lg pr-4 pl-4 rounded-pill text-center" style="background: linear-gradient(0deg, #007bff 0%, rgb(0 121 255 / 62%) 100%);"
+                      class="
+                        rounded-pill
+                        text-center
+                      "
+                      style="
+                        background: linear-gradient(
+                          0deg,
+                          #007bff 0%,
+                          rgb(0 121 255 / 62%) 100%
+                        );
+                      "
                       :disabled="!passwordold"
                     >
-                      <i class="fas fa-check-circle"></i> ยืนยัน
-                    </button>
-                  </div>
+                  <img class="img-fluid px-3" src="assets/images/custom/buntuk.png" />
+                </span>
+              </div>
+
                 </div>
               </div>
             </div>
@@ -97,7 +111,7 @@ export default {
           });
           this.$router.push("/home");
         } else {
-          console.log(' ');
+          console.log(" ");
         }
       } catch (error) {
         this.$toast.error(error.response.data.error.message, {
@@ -110,5 +124,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
+
+* {
+  color: wheat !important;
+  font-weight: 300 !important;
+}
 </style>
